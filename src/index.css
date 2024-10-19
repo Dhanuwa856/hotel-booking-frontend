@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Dominant Color (60%) – Soft Light Blue (#E3F2FD) */
+/* Secondary Color (30%) – Slate Gray (#607D8B) */
+/* Accent Color (10%) – Coral (#FF6F61) */
