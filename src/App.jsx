@@ -1,10 +1,15 @@
 import React from "react";
-import Header from "./components/Header/Header";
+import NavBar from "./components/NavBar/NavBar";
+import { Route, Routes } from "react-router-dom";
+import { HomePage } from "./Pages/HomePage";
 
 const App = () => {
   return (
     <>
-      <Header />
+      <NavBar />
+      <Routes path="/*">
+        <Route path="/" element={<HomePage />} />
+      </Routes>
     </>
   );
 };

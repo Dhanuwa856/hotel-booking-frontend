@@ -4,23 +4,6 @@ import { CiSearch } from "react-icons/ci";
 const Header = () => {
   return (
     <div className="bg-[#E3F2FD] w-full h-screen">
-      <div className="bg-[#E3F2FD] w-full flex items-center justify-between px-3 py-3 shadow-lg">
-        <img
-          src="https://placehold.co/200x50"
-          alt="Hotel Logo"
-          className="w-[200px] h-[50px] cursor-pointer"
-        />
-        <div className="flex items-center gap-3">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/219/219970.png"
-            alt="User Image"
-            className="w-[50px] rounded-full cursor-pointer"
-          />
-          <span className="text-[#607D8B] text-lg font-medium cursor-pointer hover:text-[#FF6F61] delay-75 ">
-            DHANUwa
-          </span>
-        </div>
-      </div>
       <div className="header w-full h-screen relative">
         <div className="header-bg-filter w-full h-full absolute bg-[#021c2e] opacity-[50%] left-0 top-0"></div>
         <div className="absolute input-area w-[50%] mt-[50px] left-1/2 -translate-x-1/2 rounded-lg px-[50px] py-[50px]">
