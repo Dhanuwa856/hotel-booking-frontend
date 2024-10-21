@@ -4,7 +4,7 @@ import NavLinks from "../NavLink/NavLink";
 
 function NavBar() {
   return (
-    <div className="flex items-center justify-between bg-[#E3F2FD] px-5 py-4">
+    <div className="flex items-center justify-between bg-[#E3F2FD] px-5 py-4 shadow-xl">
       <div>
         <Link to="/">
           <img
