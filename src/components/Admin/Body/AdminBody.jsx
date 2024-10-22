@@ -11,6 +11,7 @@ import {
 import AdminLink from "../Link/AdminLink";
 import { Route, Routes } from "react-router-dom";
 import { AdminHome } from "../Home/AdminHome";
+import AdminBookings from "../Bookings/AdminBookings";
 
 function AdminBody() {
   return (
@@ -50,6 +51,7 @@ function AdminBody() {
       <div className="flex-1 bg-[#F1F5F9] p-6 overflow-scroll w-[75%] ">
         <Routes path="/*">
           <Route path="/" element={<AdminHome />} />
+          <Route path="/bookings" element={<AdminBookings />} />
         </Routes>
       </div>
     </div>
