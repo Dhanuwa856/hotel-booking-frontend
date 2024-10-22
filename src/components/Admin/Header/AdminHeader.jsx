@@ -4,7 +4,7 @@ import { CiUser } from "react-icons/ci";
 
 export const AdminHeader = () => {
   return (
-    <header className="bg-[#E3F2FD] flex items-center justify-between px-10 py-3">
+    <header className="bg-[#E3F2FD] flex items-center justify-between px-10 py-3 shadow-xl">
       <div className="flex items-center gap-5">
         <img src="https://placehold.co/50x50" alt="Hotel Logo" />
         <h2 className="text-2xl capitalize font-bold text-[#607D8B]">
