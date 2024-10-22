@@ -12,6 +12,7 @@ import AdminLink from "../Link/AdminLink";
 import { Route, Routes } from "react-router-dom";
 import { AdminHome } from "../Home/AdminHome";
 import AdminBookings from "../Bookings/AdminBookings";
+import AdminFeedback from "../Feedback/AdminFeedback";
 
 function AdminBody() {
   return (
@@ -52,6 +53,7 @@ function AdminBody() {
         <Routes path="/*">
           <Route path="/" element={<AdminHome />} />
           <Route path="/bookings" element={<AdminBookings />} />
+          <Route path="/feedback" element={<AdminFeedback />} />
         </Routes>
       </div>
     </div>
