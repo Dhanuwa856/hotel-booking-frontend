@@ -13,6 +13,8 @@ import { Route, Routes } from "react-router-dom";
 import { AdminHome } from "../Home/AdminHome";
 import AdminBookings from "../Bookings/AdminBookings";
 import AdminFeedback from "../Feedback/AdminFeedback";
+import AdminCategories from "../Categories/AdminCategories";
+import AdminUsers from "../Users/AdminUsers";
 
 function AdminBody() {
   return (
@@ -54,6 +56,8 @@ function AdminBody() {
           <Route path="/" element={<AdminHome />} />
           <Route path="/bookings" element={<AdminBookings />} />
           <Route path="/feedback" element={<AdminFeedback />} />
+          <Route path="/categories" element={<AdminCategories />} />
+          <Route path="/users" element={<AdminUsers />} />
         </Routes>
       </div>
     </div>
