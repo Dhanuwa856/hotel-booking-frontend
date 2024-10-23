@@ -1,57 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const AdminBookings = () => {
   // Sample booking data
-  const [bookings, setBookings] = useState([
-    {
-      _id: "1",
-      booking_id: 2003,
-      room_id: "Room101",
-      email: "john@example.com",
-      status: "confirmed",
-      checkInDate: "2024-10-25",
-      checkOutDate: "2024-10-30",
-      guests: 2,
-      reason: "Vacation",
-      notes: "Prefer upper floor",
-    },
-    {
-      _id: "2",
-      booking_id: 2004,
-      room_id: "Room102",
-      email: "jane@example.com",
-      status: "pending",
-      checkInDate: "2024-11-01",
-      checkOutDate: "2024-11-05",
-      guests: 3,
-      reason: "",
-      notes: "",
-    },
-    {
-      _id: "3",
-      booking_id: 2005,
-      room_id: "Room103",
-      email: "mike@example.com",
-      status: "cancelled",
-      checkInDate: "2024-12-12",
-      checkOutDate: "2024-12-15",
-      guests: 1,
-      reason: "Change of plans",
-      notes: "Will book later",
-    },
-  ]);
-
+  const [bookings, setBookings] = useState();
   const [editBooking, setEditBooking] = useState(null);
 
-  // Handle update booking (for now, we'll just update the local state)
-  const handleUpdate = (id, updatedData) => {
-    setBookings((prevBookings) =>
-      prevBookings.map((booking) =>
-        booking._id === id ? updatedData : booking
-      )
-    );
-    setEditBooking(null); // Exit edit mode
+  // Update the API URLs
+  const apiGetAllUrl = `${import.meta.env.VITE_API_URL}/booking/all`;
+  const apiPutAdmin = (booking_id) =>
+    `${import.meta.env.VITE_API_URL}/change/${booking_id}`;
+
+  useEffect(() => {
+    axios
+      .get(apiGetAllUrl)
+      .then((res) => {
+        setBookings(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching bookings:", err);
+      });
+  }, []);
+
+  // Handle update booking
+  const handleUpdate = (booking_id, updatedData) => {
+    console.log(booking_id, updatedData);
+    axios
+      .put(apiPutAdmin(booking_id), updatedData)
+      .then((res) => {
+        console.log("Booking updated:", res.data);
+        setBookings((prevBookings) =>
+          prevBookings.map((booking) =>
+            booking.booking_id === booking_id ? res.data : booking
+          )
+        );
+        setEditBooking(null); // Exit edit mode after save
+      })
+      .catch((err) => {
+        console.error("Error updating booking:", err);
+      });
   };
+
+  if (!bookings) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="flex items-center space-x-2">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <p className="text-lg font-semibold text-gray-700">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">

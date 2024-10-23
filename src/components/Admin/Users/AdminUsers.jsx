@@ -1,34 +1,22 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const AdminUsers = () => {
-  const [users, setUsers] = useState([
-    {
-      _id: "1",
-      email: "john.doe@example.com",
-      firstName: "John",
-      lastName: "Doe",
-      phone: "123-456-7890",
-      whatsapp: "+1234567890",
-      image: "john_doe.jpg",
-      type: "customer",
-      disabled: false,
-      emailVerified: true,
-    },
-    {
-      _id: "2",
-      email: "jane.smith@example.com",
-      firstName: "Jane",
-      lastName: "Smith",
-      phone: "098-765-4321",
-      whatsapp: "+0987654321",
-      image: "https://cdn-icons-png.flaticon.com/512/219/219986.png",
-      type: "admin",
-      disabled: false,
-      emailVerified: false,
-    },
-  ]);
-
+  const [users, setUsers] = useState(null);
   const [editUser, setEditUser] = useState(null);
+
+  const apiGetAllUrl = `${import.meta.env.VITE_API_URL}/users/`;
+
+  useEffect(() => {
+    axios
+      .get(apiGetAllUrl)
+      .then((res) => {
+        setUsers(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching users:", err);
+      });
+  });
 
   const handleUpdate = (id, updatedUser) => {
     setUsers((prevUsers) =>
@@ -36,6 +24,17 @@ const AdminUsers = () => {
     );
     setEditUser(null); // Exit edit mode
   };
+
+  if (!users) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="flex items-center space-x-2">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <p className="text-lg font-semibold text-gray-700">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -136,12 +135,12 @@ const AdminUsers = () => {
                   {editUser === user._id ? (
                     <input
                       type="text"
-                      value={user.whatsapp}
+                      value={user.whatsApp}
                       onChange={(e) =>
                         setUsers((prev) =>
                           prev.map((usr) =>
                             usr._id === user._id
-                              ? { ...usr, whatsapp: e.target.value }
+                              ? { ...usr, whatsApp: e.target.value }
                               : usr
                           )
                         )
@@ -149,7 +148,7 @@ const AdminUsers = () => {
                       className="border border-gray-300 p-2 rounded-md"
                     />
                   ) : (
-                    user.whatsapp
+                    user.whatsApp
                   )}
                 </td>
 

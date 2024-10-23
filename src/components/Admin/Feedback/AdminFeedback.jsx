@@ -1,31 +1,23 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const AdminFeedback = () => {
   // Sample feedback data
-  const [feedbacks, setFeedbacks] = useState([
-    {
-      feedback_id: 1001,
-      email: "johndoe@example.com",
-      firstName: "John",
-      lastName: "Doe",
-      content: "Great service, but the room was a bit small.",
-      rating: 4,
-      status: "pending",
-      submittedAt: new Date(),
-    },
-    {
-      feedback_id: 1002,
-      email: "janedoe@example.com",
-      firstName: "Jane",
-      lastName: "Doe",
-      content: "Excellent stay, loved the experience.",
-      rating: 5,
-      status: "approved",
-      submittedAt: new Date(),
-    },
-  ]);
-
+  const [feedbacks, setFeedbacks] = useState(null);
   const [editFeedback, setEditFeedback] = useState(null);
+
+  const apiGetAllUrl = `${import.meta.env.VITE_API_URL}/feedback/all`;
+
+  useEffect(() => {
+    axios
+      .get(apiGetAllUrl)
+      .then((res) => {
+        setFeedbacks(res.data.feedback);
+      })
+      .catch((err) => {
+        console.error("Error fetching feedback:", err);
+      });
+  });
 
   // Handle feedback status update
   const handleStatusChange = (id, newStatus) => {
@@ -38,6 +30,16 @@ const AdminFeedback = () => {
     setEditFeedback(null);
   };
 
+  if (!feedbacks) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="flex items-center space-x-2">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <p className="text-lg font-semibold text-gray-700">Loading...</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-semibold mb-8 text-gray-800">

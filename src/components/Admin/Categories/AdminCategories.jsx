@@ -1,28 +1,23 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const AdminCategories = () => {
   // Sample category data
-  const [categories, setCategories] = useState([
-    {
-      _id: "1",
-      name: "Deluxe Room",
-      price: 120,
-      description: "Spacious room with a balcony and sea view.",
-      features: ["Sea view", "King-sized bed", "Free breakfast"],
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_b-YTwImwx9xjkL6YE5MMK1rxqNgkC1_7Q&s",
-    },
-    {
-      _id: "2",
-      name: "Standard Room",
-      price: 80,
-      description: "Comfortable room with basic amenities.",
-      features: ["Queen-sized bed", "Free Wi-Fi"],
-      image: "standard_room.jpg",
-    },
-  ]);
-
+  const [categories, setCategories] = useState(null);
   const [editCategory, setEditCategory] = useState(null);
+
+  const apiGetAllUrl = `${import.meta.env.VITE_API_URL}/categories`;
+
+  useEffect(() => {
+    axios
+      .get(apiGetAllUrl)
+      .then((res) => {
+        setCategories(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching category:", err);
+      });
+  }, [apiGetAllUrl]);
 
   // Handle category update
   const handleUpdate = (id, updatedCategory) => {
@@ -33,6 +28,16 @@ const AdminCategories = () => {
     );
     setEditCategory(null); // Exit edit mode
   };
+  if (!categories) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="flex items-center space-x-2">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <p className="text-lg font-semibold text-gray-700">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
