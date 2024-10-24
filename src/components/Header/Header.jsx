@@ -5,8 +5,8 @@ const Header = () => {
   return (
     <div className="bg-[#E3F2FD] w-full h-screen">
       <div className="header w-full h-screen relative">
-        <div className="header-bg-filter w-full h-full absolute bg-[#021c2e] opacity-[50%] left-0 top-0"></div>
-        <div className="absolute input-area w-[50%] mt-[50px] left-1/2 -translate-x-1/2 rounded-lg px-[50px] py-[50px]">
+        <div className="header-bg-filter w-full h-full absolute bg-[#469ad6] opacity-[30%] left-0 top-0"></div>
+        <div className="absolute input-area backdrop-blur-lg w-[40%] mt-[50px] left-1/2 -translate-x-1/2 rounded-lg px-[50px] py-[50px] shadow-2xl">
           <h2 className="text-3xl font-bold text-[#021c2e] mb-4 capitalize">
             Book Your Stay
           </h2>

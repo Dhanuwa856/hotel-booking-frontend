@@ -20,7 +20,7 @@ function AdminBody() {
   return (
     <div className="w-full flex max-h-screen">
       {/* Sidebar */}
-      <div className="w-[20%] flex flex-col gap-8 bg-[#607D8B] h-screen p-6">
+      <div className="w-[20%] flex flex-col gap-8 bg-[#607D8B] h-full p-6">
         <AdminLink link_name="Home" link_url="/admin/" icon={<FaHome />} />
         <AdminLink
           link_name="Bookings"
