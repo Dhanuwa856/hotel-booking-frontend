@@ -1,8 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegBell } from "react-icons/fa";
-import { CiUser } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
+import { MdLogout } from "react-icons/md";
 
 export const AdminHeader = () => {
+  const [admin, setAdmin] = useState(null);
+  const [logoutMessage, setLogoutMessage] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("userToken");
+
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decoding base64 payload
+      setAdmin(decodedToken); // Save decoded user info in state
+      console.log(decodedToken);
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    // Ask for logout confirmation
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+
+    if (confirmLogout) {
+      localStorage.removeItem("userToken"); // Remove token on logout
+      setAdmin(null);
+      setLogoutMessage(true); // Show the logout message
+      navigate("/"); // Redirect to home after logout
+
+      // Hide the message after 3 seconds
+      setTimeout(() => {
+        setLogoutMessage(false);
+      }, 3000);
+    }
+    // If the user cancels, do nothing and stay on the same page
+  };
+
   return (
     <header className="bg-[#E3F2FD] flex items-center justify-between px-10 py-3 shadow-xl">
       <div className="flex items-center gap-5">
@@ -22,9 +55,27 @@ export const AdminHeader = () => {
         <button className="h-10 w-10 hover:bg-[#ddd] flex items-center justify-center rounded-lg hover:text-white">
           <FaRegBell />
         </button>
-        <button className="h-5 w-5">
-          <CiUser />
-        </button>
+        {admin && (
+          <>
+            {" "}
+            <img
+              src={admin.image}
+              alt="admin image"
+              className="w-[40px] h-[40px] rounded-full cursor-pointer"
+            />
+            <button
+              onClick={handleLogout}
+              className="text-red-600 font-medium ml-4 hover:underline text-xl"
+            >
+              <MdLogout />
+            </button>
+          </>
+        )}
+        {logoutMessage && (
+          <div className="fixed bottom-10 right-4 bg-gray-800 text-white py-2 px-4 rounded shadow-lg z-[100]">
+            You have been logged out successfully.
+          </div>
+        )}
       </div>
     </header>
   );

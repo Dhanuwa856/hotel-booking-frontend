@@ -17,7 +17,6 @@ function Login() {
         password: password,
       })
       .then((res) => {
-        console.log(res);
         setErrorMessage(""); // Clear error message on successful login
         // Save token and redirect user (if needed)
         localStorage.setItem("userToken", res.data.token);

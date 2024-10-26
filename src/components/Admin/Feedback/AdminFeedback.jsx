@@ -9,8 +9,13 @@ const AdminFeedback = () => {
   const apiGetAllUrl = `${import.meta.env.VITE_API_URL}/feedback/all`;
 
   useEffect(() => {
+    const token = localStorage.getItem("userToken");
     axios
-      .get(apiGetAllUrl)
+      .get(apiGetAllUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         setFeedbacks(res.data.feedback);
       })

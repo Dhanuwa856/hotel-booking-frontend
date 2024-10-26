@@ -11,8 +11,13 @@ export const AdminHome = () => {
   const apiUrl = import.meta.env.VITE_API_URL + "/users/stats";
 
   useEffect(() => {
+    const token = localStorage.getItem("userToken");
     axios
-      .get(apiUrl)
+      .get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setStats(response.data);
       })

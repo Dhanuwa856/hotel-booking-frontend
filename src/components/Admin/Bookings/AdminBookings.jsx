@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const AdminBookings = () => {
-  // Sample booking data
   const [bookings, setBookings] = useState();
   const [editBooking, setEditBooking] = useState(null);
 
@@ -12,8 +11,13 @@ const AdminBookings = () => {
     `${import.meta.env.VITE_API_URL}/change/${booking_id}`;
 
   useEffect(() => {
+    const token = localStorage.getItem("userToken");
     axios
-      .get(apiGetAllUrl)
+      .get(apiGetAllUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         setBookings(res.data);
       })
@@ -24,14 +28,28 @@ const AdminBookings = () => {
 
   // Handle update booking
   const handleUpdate = (booking_id, updatedData) => {
-    console.log(booking_id, updatedData);
+    const token = localStorage.getItem("userToken");
+
+    // Prepare only the updated fields to send in the request
+    const dataToSend = {
+      status: updatedData.status,
+      reason: updatedData.reason,
+      notes: updatedData.notes,
+    };
+
     axios
-      .put(apiPutAdmin(booking_id), updatedData)
+      .put(apiPutAdmin(booking_id), dataToSend, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         console.log("Booking updated:", res.data);
+
+        // Update state with the new booking data after a successful update
         setBookings((prevBookings) =>
           prevBookings.map((booking) =>
-            booking.booking_id === booking_id ? res.data : booking
+            booking._id === booking_id ? res.data : booking
           )
         );
         setEditBooking(null); // Exit edit mode after save
@@ -77,20 +95,20 @@ const AdminBookings = () => {
           <tbody className="text-gray-700 text-sm">
             {bookings.map((booking) => (
               <tr
-                key={booking._id}
+                key={booking.booking_id}
                 className="border-b border-gray-200 hover:bg-gray-100 transition duration-150"
               >
                 <td className="py-3 px-6 text-left">{booking.booking_id}</td>
                 <td className="py-3 px-6 text-left">{booking.room_id}</td>
                 <td className="py-3 px-6 text-left">{booking.email}</td>
                 <td className="py-3 px-6 text-left">
-                  {editBooking === booking._id ? (
+                  {editBooking === booking.booking_id ? (
                     <select
                       value={booking.status}
                       onChange={(e) =>
                         setBookings((prev) =>
                           prev.map((b) =>
-                            b._id === booking._id
+                            b.booking_id === booking.booking_id
                               ? { ...b, status: e.target.value }
                               : b
                           )
@@ -124,14 +142,14 @@ const AdminBookings = () => {
                 </td>
                 <td className="py-3 px-6 text-left">{booking.guests}</td>
                 <td className="py-3 px-6 text-left">
-                  {editBooking === booking._id ? (
+                  {editBooking === booking.booking_id ? (
                     <input
                       type="text"
                       value={booking.reason}
                       onChange={(e) =>
                         setBookings((prev) =>
                           prev.map((b) =>
-                            b._id === booking._id
+                            b.booking_id === booking.booking_id
                               ? { ...b, reason: e.target.value }
                               : b
                           )
@@ -144,14 +162,14 @@ const AdminBookings = () => {
                   )}
                 </td>
                 <td className="py-3 px-6 text-left">
-                  {editBooking === booking._id ? (
+                  {editBooking === booking.booking_id ? (
                     <input
                       type="text"
                       value={booking.notes}
                       onChange={(e) =>
                         setBookings((prev) =>
                           prev.map((b) =>
-                            b._id === booking._id
+                            b.booking_id === booking.booking_id
                               ? { ...b, notes: e.target.value }
                               : b
                           )
@@ -164,16 +182,16 @@ const AdminBookings = () => {
                   )}
                 </td>
                 <td className="py-3 px-6 text-center">
-                  {editBooking === booking._id ? (
+                  {editBooking === booking.booking_id ? (
                     <button
-                      onClick={() => handleUpdate(booking._id, booking)}
+                      onClick={() => handleUpdate(booking.booking_id, booking)}
                       className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
                     >
                       Save
                     </button>
                   ) : (
                     <button
-                      onClick={() => setEditBooking(booking._id)}
+                      onClick={() => setEditBooking(booking.booking_id)}
                       className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
                     >
                       Edit
