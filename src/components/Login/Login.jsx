@@ -40,6 +40,7 @@ function Login() {
           onSubmit={handleLogin}
         >
           <input
+            autoFocus
             required
             type="text"
             placeholder="Enter your email address"

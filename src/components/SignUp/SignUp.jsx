@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import "./SignUp.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import uploadMedia from "../../Utils/mediaUpload";
 
 function SignUp() {
-  const [fristName, setFirstName] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,7 +17,7 @@ function SignUp() {
 
   const apiUserPostUrl = import.meta.env.VITE_API_URL + "/users/";
 
-  function handleSignUp(e) {
+  async function handleSignUp(e) {
     e.preventDefault();
     setErrorMessage("");
 
@@ -29,29 +30,29 @@ function SignUp() {
       return;
     }
 
-    axios
-      .post(apiUserPostUrl, {
+    try {
+      const imageUrl = await uploadMedia(image); // Uploads and gets the URL
+      await axios.post(apiUserPostUrl, {
         email: email,
         password: password,
-        image: image,
-        firstName: fristName,
+        image: imageUrl,
+        firstName: firstName,
         lastName: lastName,
         whatsApp: whatsappNumber,
         phone: phoneNumber,
-      })
-      .then((res) => {
-        window.location.href = "/login";
-      })
-      .catch((err) => {
-        if (err.response.data.message.includes("duplicate key")) {
-          setErrorMessage(
-            `An account with this email already exists. Please log in `
-          );
-        } else {
-          setErrorMessage("Something went wrong. Please try again.");
-        }
       });
+      window.location.href = "/login";
+    } catch (err) {
+      if (err.response?.data?.message?.includes("duplicate key")) {
+        setErrorMessage(
+          "An account with this email already exists. Please log in."
+        );
+      } else {
+        setErrorMessage("Something went wrong. Please try again.");
+      }
+    }
   }
+
   return (
     <div className="sign-up-bg w-full h-screen bg-cover bg-center flex justify-center items-center relative">
       <div className="bg-[#469ad6] w-full h-full opacity-[30%] absolute top-0 left-0"></div>
@@ -67,7 +68,7 @@ function SignUp() {
             <input
               autoFocus
               type="text"
-              value={fristName}
+              value={firstName}
               onChange={(e) => {
                 setFirstName(e.target.value);
               }}
@@ -147,7 +148,7 @@ function SignUp() {
             <input
               type="file"
               onChange={(e) => setImage(e.target.files[0])}
-              className="w-full bg-transparent text-white placeholder-white border-2 border-white px-3 py-2 rounded-md outline-none transition duration-300 focus:border-red-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
+              className="w-full bg-transparent text-white placeholder-white border-2 border-white px-3 py-2 rounded-md outline-none transition duration-300 focus:border-red-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-red-600 hover:file:bg-blue-200"
             />
           </div>
           {errorMessage && (

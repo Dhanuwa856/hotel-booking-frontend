@@ -56,6 +56,7 @@ const AdminUsers = () => {
               <th className="py-3 px-6 text-left">WhatsApp</th>
               <th className="py-3 px-6 text-left">Image</th>
               <th className="py-3 px-6 text-left">Type</th>
+              <th className="py-3 px-6 text-left">Disabled</th>
               <th className="py-3 px-6 text-center">Email Verified</th>
               <th className="py-3 px-6 text-center">Actions</th>
             </tr>
@@ -185,6 +186,15 @@ const AdminUsers = () => {
 
                 {/* Type */}
                 <td className="py-3 px-6 text-left">{user.type}</td>
+                <td className="py-3 px-6 text-center">
+                  {user.disabled ? (
+                    <span className="text-red-500 font-semibold">Disabled</span>
+                  ) : (
+                    <span className="text-green-500 font-semibold">
+                      Enabled
+                    </span>
+                  )}
+                </td>
 
                 {/* Email Verified */}
                 <td className="py-3 px-6 text-center">

@@ -61,7 +61,7 @@ export const AdminHeader = () => {
             <img
               src={admin.image}
               alt="admin image"
-              className="w-[40px] h-[40px] rounded-full cursor-pointer"
+              className="w-[45px] h-[45px] rounded-full cursor-pointer object-cover object-center"
             />
             <button
               onClick={handleLogout}

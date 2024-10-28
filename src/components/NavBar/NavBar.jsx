@@ -70,9 +70,9 @@ function NavBar() {
               <img
                 src={user.image}
                 alt="User Image"
-                className="w-[40px] h-[40px] rounded-full cursor-pointer"
+                className="w-[45px] h-[45px] rounded-full cursor-pointer object-cover object-center "
               />
-              <span className="text-[#607D8B] text-lg font-medium cursor-pointer hover:text-[#FF6F61] delay-75">
+              <span className="text-[#607D8B] text-lg font-medium cursor-pointer hover:text-[#FF6F61] delay-75 capitalize">
                 {user.firstName} {user.lastName}
               </span>
               <button
