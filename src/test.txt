@@ -1,0 +1,432 @@
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import uploadMedia from "/src/Utils/mediaUpload";
+
+function AdminRooms() {
+  const [rooms, setRooms] = useState([]);
+  const [editRoom, setEditRoom] = useState(null);
+  const [editedData, setEditedData] = useState({
+    maxGuests: "",
+    photos: [],
+    description: "",
+    isAvailable: false,
+    price: "",
+  });
+  const [showModal, setShowModal] = useState(false);
+  const [newRoomData, setNewRoomData] = useState({
+    category: "",
+    maxGuests: 1,
+    photos: [],
+    description: "",
+    isAvailable: true,
+    price: "",
+  });
+
+  const apiRoomGet = import.meta.env.VITE_API_URL + "/rooms/";
+
+  useEffect(() => {
+    const token = localStorage.getItem("userToken");
+    axios
+      .get(apiRoomGet, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setRooms(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching rooms:", err);
+      });
+  }, [newRoomData]);
+
+  const handleEditClick = (room) => {
+    setEditRoom(room.roomNumber);
+    setEditedData({
+      maxGuests: room.maxGuests,
+      photos: room.photos,
+      description: room.description,
+      isAvailable: room.isAvailable,
+      price: room.price,
+    });
+  };
+
+  const handleSaveClick = async (roomNumber) => {
+    const token = localStorage.getItem("userToken");
+    try {
+      await axios.put(
+        `${apiRoomGet}${roomNumber}`,
+        { ...editedData },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Refresh room data after update
+      setRooms(
+        rooms.map((room) =>
+          room.roomNumber === roomNumber ? { ...room, ...editedData } : room
+        )
+      );
+      setEditRoom(null);
+    } catch (err) {
+      console.error("Error updating room:", err);
+    }
+  };
+
+  const handleAddRoomClick = () => {
+    setShowModal(true);
+  };
+
+  const handleImageUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    const imageUrls = await Promise.all(files.map((file) => uploadMedia(file)));
+    setNewRoomData((prev) => ({
+      ...prev,
+      photos: [...prev.photos, ...imageUrls],
+    }));
+  };
+  const handleSaveNewRoom = async () => {
+    const token = localStorage.getItem("userToken");
+    try {
+      const response = await axios.post(
+        apiRoomGet,
+        { ...newRoomData },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setRooms([...rooms, response.data]); // Use response to ensure data consistency
+      setShowModal(false); // Close modal
+      setNewRoomData({
+        roomNumber: "", // Reset room number
+        category: "",
+        maxGuests: 1,
+        photos: [],
+        description: "",
+        isAvailable: true,
+        price: "",
+      });
+    } catch (err) {
+      console.error("Error adding room:", err);
+    }
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-semibold mb-8 text-gray-800">Admin Rooms</h1>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white shadow-md rounded-lg">
+          <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+            <tr>
+              <th className="py-3 px-6 text-left">Room Number</th>
+              <th className="py-3 px-6 text-left">Category</th>
+              <th className="py-3 px-6 text-left">Max Guests</th>
+              <th className="py-3 px-6 text-left">Photos</th>
+              <th className="py-3 px-6 text-left">Description</th>
+              <th className="py-3 px-6 text-left">Is Available</th>
+              <th className="py-3 px-6 text-left">Price ($)</th>
+              <th className="py-3 px-6 text-left">Created At</th>
+              <th className="py-3 px-6 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="text-gray-700 text-sm">
+            {rooms.map((room) => (
+              <tr
+                className="border-b border-gray-200 hover:bg-gray-100 transition duration-150"
+                key={room.roomNumber}
+              >
+                <td className="py-3 px-6 text-left">{room.roomNumber}</td>
+                <td className="py-3 px-6 text-left">{room.category}</td>
+
+                <td className="py-3 px-6 text-left">
+                  {editRoom === room.roomNumber ? (
+                    <input
+                      type="number"
+                      value={editedData.maxGuests}
+                      onChange={(e) =>
+                        setEditedData({
+                          ...editedData,
+                          maxGuests: e.target.value,
+                        })
+                      }
+                      className="border rounded px-2 py-1"
+                    />
+                  ) : (
+                    room.maxGuests
+                  )}
+                </td>
+
+                <td className="py-3 w-auto text-left grid grid-cols-2 gap-2">
+                  {editRoom === room.roomNumber
+                    ? editedData.photos.map((photo, index) => (
+                        <input
+                          type="text"
+                          key={index}
+                          value={photo}
+                          onChange={(e) => {
+                            const newPhotos = [...editedData.photos];
+                            newPhotos[index] = e.target.value;
+                            setEditedData({ ...editedData, photos: newPhotos });
+                          }}
+                          className="border rounded px-2 py-1"
+                        />
+                      ))
+                    : room.photos.map((photo) => (
+                        <img
+                          src={photo}
+                          alt="room"
+                          className="h-[50px] object-cover object-center"
+                          key={room.roomNumber}
+                        />
+                      ))}
+                </td>
+
+                <td className="py-3 px-6 text-left">
+                  {editRoom === room.roomNumber ? (
+                    <input
+                      type="text"
+                      value={editedData.description}
+                      onChange={(e) =>
+                        setEditedData({
+                          ...editedData,
+                          description: e.target.value,
+                        })
+                      }
+                      className="border rounded px-2 py-1"
+                    />
+                  ) : (
+                    room.description
+                  )}
+                </td>
+
+                <td className="py-3 px-6 text-left">
+                  {editRoom === room.roomNumber ? (
+                    <select
+                      value={editedData.isAvailable}
+                      onChange={(e) =>
+                        setEditedData({
+                          ...editedData,
+                          isAvailable: e.target.value === "true",
+                        })
+                      }
+                      className="border rounded px-2 py-1"
+                    >
+                      <option value="true">Available</option>
+                      <option value="false">Unavailable</option>
+                    </select>
+                  ) : room.isAvailable ? (
+                    <span className="text-green-500 font-semibold">
+                      Available
+                    </span>
+                  ) : (
+                    <span className="font-semibold text-red-500">
+                      Unavailable
+                    </span>
+                  )}
+                </td>
+
+                <td className="py-3 px-6 text-left">
+                  {editRoom === room.roomNumber ? (
+                    <input
+                      type="number"
+                      value={editedData.price}
+                      onChange={(e) =>
+                        setEditedData({ ...editedData, price: e.target.value })
+                      }
+                      className="border rounded px-2 py-1"
+                    />
+                  ) : (
+                    room.price
+                  )}
+                </td>
+
+                <td className="py-3 px-6 text-left">
+                  {new Date(room.createdAt).toLocaleDateString()}
+                </td>
+
+                <td className="py-3 px-6 text-center">
+                  {editRoom === room.roomNumber ? (
+                    <button
+                      onClick={() => handleSaveClick(room.roomNumber)}
+                      className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
+                    >
+                      Save
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleEditClick(room)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                    >
+                      Edit
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <button
+        className="fixed bottom-6 right-6 bg-blue-500 text-white rounded-full p-4 shadow-lg hover:bg-blue-600 transition"
+        onClick={handleAddRoomClick}
+      >
+        <FaPlus size={20} />
+      </button>
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-[90%] max-w-md transform transition-transform duration-300 scale-100 max-h-[80vh] overflow-y-scroll">
+            <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
+              Add New Room
+            </h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Room Number
+                </label>
+                <input
+                  type="text"
+                  value={newRoomData.roomNumber}
+                  onChange={(e) =>
+                    setNewRoomData({
+                      ...newRoomData,
+                      roomNumber: e.target.value,
+                    })
+                  }
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:border-blue-500"
+                  placeholder="Room Number"
+                />
+              </div>
+
+              {/* Category Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Category
+                </label>
+                <input
+                  type="text"
+                  value={newRoomData.category}
+                  onChange={(e) =>
+                    setNewRoomData({ ...newRoomData, category: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:border-blue-500"
+                  placeholder="e.g., Deluxe"
+                />
+              </div>
+
+              {/* Max Guests Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Max Guests
+                </label>
+                <input
+                  type="number"
+                  value={newRoomData.maxGuests}
+                  onChange={(e) =>
+                    setNewRoomData({
+                      ...newRoomData,
+                      maxGuests: +e.target.value,
+                    })
+                  }
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:border-blue-500"
+                  placeholder="e.g., 4"
+                />
+              </div>
+
+              {/* Image Upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Photos
+                </label>
+                <input
+                  type="file"
+                  multiple
+                  onChange={handleImageUpload}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:border-blue-500"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Upload multiple photos for a better experience.
+                </p>
+              </div>
+
+              {/* Description Textarea */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Description
+                </label>
+                <textarea
+                  value={newRoomData.description}
+                  onChange={(e) =>
+                    setNewRoomData({
+                      ...newRoomData,
+                      description: e.target.value,
+                    })
+                  }
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:border-blue-500 resize-none"
+                  placeholder="Write a brief description of the room."
+                />
+              </div>
+
+              {/* Availability Select */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Availability
+                </label>
+                <select
+                  value={newRoomData.isAvailable}
+                  onChange={(e) =>
+                    setNewRoomData({
+                      ...newRoomData,
+                      isAvailable: e.target.value === "true",
+                    })
+                  }
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:border-blue-500"
+                >
+                  <option value="true">Available</option>
+                  <option value="false">Unavailable</option>
+                </select>
+              </div>
+
+              {/* Price Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Price ($)
+                </label>
+                <input
+                  type="number"
+                  value={newRoomData.price}
+                  onChange={(e) =>
+                    setNewRoomData({ ...newRoomData, price: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:border-blue-500"
+                  placeholder="e.g., 150"
+                />
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-5 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveNewRoom}
+                className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+              >
+                Save Room
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default AdminRooms;
