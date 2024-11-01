@@ -8,13 +8,37 @@ export const AdminHeader = () => {
   const [logoutMessage, setLogoutMessage] = useState(false);
   const navigate = useNavigate();
 
+  function decodeToken(token) {
+    try {
+      // Split the token to get the payload
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+
+      // Decode the base64 payload
+      const jsonPayload = atob(base64);
+
+      // Parse it as JSON
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      console.error("Failed to decode token:", error);
+      return null;
+    }
+  }
+
   useEffect(() => {
     const token = localStorage.getItem("userToken");
 
     if (token) {
-      const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decoding base64 payload
-      setAdmin(decodedToken); // Save decoded user info in state
-      console.log(decodedToken);
+      try {
+        const decodedToken = decodeToken(token); // Decoding base64 payload
+        setAdmin(decodedToken); // Save decoded user info in state
+        console.log(decodedToken);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        // Remove the invalid token from storage and redirect to login if needed
+        localStorage.removeItem("userToken");
+        navigate("/login"); // Redirect to login page
+      }
     }
   }, [navigate]);
 

@@ -2,26 +2,51 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import NavLinks from "../NavLink/NavLink";
 import { MdLogout } from "react-icons/md";
+import axios from "axios";
 
 function NavBar() {
   const [user, setUser] = useState(null);
   const [showLogoutMessage, setShowLogoutMessage] = useState(false); // State for showing logout toast
   const navigate = useNavigate();
 
+  function decodeToken(token) {
+    try {
+      // Split the token to get the payload
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+
+      // Decode the base64 payload
+      const jsonPayload = atob(base64);
+
+      // Parse it as JSON
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      console.error("Failed to decode token:", error);
+      return null;
+    }
+  }
+
   useEffect(() => {
     // Check if the user token exists in localStorage
     const token = localStorage.getItem("userToken");
 
     if (token) {
-      // Decode token to get user information (Assuming JWT format)
-      const userData = JSON.parse(atob(token.split(".")[1]));
-      setUser(userData);
+      try {
+        // Decode token to get user information (Assuming JWT format)
+        const userData = decodeToken(token);
+        setUser(userData);
 
-      // Redirect based on user type
-      if (userData.type === "admin") {
-        navigate("/admin"); // Redirect admin to admin panel
-      } else {
-        navigate("/"); // Redirect customer to home page
+        // Redirect based on user type
+        if (userData.type === "admin") {
+          navigate("/admin"); // Redirect admin to admin panel
+        } else {
+          navigate("/"); // Redirect customer to home page
+        }
+      } catch (err) {
+        console.error("Error decoding token:", err);
+        // Remove the invalid token from storage and redirect to login if needed
+        localStorage.removeItem("userToken");
+        navigate("/login"); // Redirect to login page
       }
     }
   }, [navigate]);
