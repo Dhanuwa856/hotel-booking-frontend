@@ -2,28 +2,12 @@ import React, { useEffect, useState } from "react";
 import { FaRegBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { MdLogout } from "react-icons/md";
+import decodeToken from "../../decodeToken";
 
 export const AdminHeader = () => {
   const [admin, setAdmin] = useState(null);
   const [logoutMessage, setLogoutMessage] = useState(false);
   const navigate = useNavigate();
-
-  function decodeToken(token) {
-    try {
-      // Split the token to get the payload
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-
-      // Decode the base64 payload
-      const jsonPayload = atob(base64);
-
-      // Parse it as JSON
-      return JSON.parse(jsonPayload);
-    } catch (error) {
-      console.error("Failed to decode token:", error);
-      return null;
-    }
-  }
 
   useEffect(() => {
     const token = localStorage.getItem("userToken");
