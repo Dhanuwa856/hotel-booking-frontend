@@ -3,12 +3,15 @@ import axios from "axios";
 
 const AdminBookings = () => {
   const [bookings, setBookings] = useState();
-  const [editBooking, setEditBooking] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [status, setStatus] = useState("");
+  const [reason, setReason] = useState("");
+  const [notes, setNotes] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   // Update the API URLs
   const apiGetAllUrl = `${import.meta.env.VITE_API_URL}/booking/all`;
-  const apiPutAdmin = (booking_id) =>
-    `${import.meta.env.VITE_API_URL}/change/${booking_id}`;
+  const apiUpdateUrl = `${import.meta.env.VITE_API_URL}/booking/change/`;
 
   useEffect(() => {
     const token = localStorage.getItem("userToken");
@@ -26,33 +29,36 @@ const AdminBookings = () => {
       });
   }, []);
 
-  // Handle update booking
-  const handleUpdate = (booking_id, updatedData) => {
+  const openModal = (booking) => {
+    setSelectedBooking(booking);
+    setStatus(booking.status);
+    setReason(booking.reason);
+    setNotes(booking.notes);
+    setShowModal(true);
+  };
+
+  const handleEdit = () => {
     const token = localStorage.getItem("userToken");
-
-    // Prepare only the updated fields to send in the request
-    const dataToSend = {
-      status: updatedData.status,
-      reason: updatedData.reason,
-      notes: updatedData.notes,
-    };
-
     axios
-      .put(apiPutAdmin(booking_id), dataToSend, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .put(
+        `${apiUpdateUrl}${selectedBooking.booking_id}`,
+        { status, reason, notes },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((res) => {
-        console.log("Booking updated:", res.data);
-
-        // Update state with the new booking data after a successful update
+        // Update bookings with the edited data
         setBookings((prevBookings) =>
           prevBookings.map((booking) =>
-            booking._id === booking_id ? res.data : booking
+            booking.booking_id === selectedBooking.booking_id
+              ? { ...booking, status, reason, notes }
+              : booking
           )
         );
-        setEditBooking(null); // Exit edit mode after save
+        setShowModal(false); // Close modal after success
       })
       .catch((err) => {
         console.error("Error updating booking:", err);
@@ -101,39 +107,20 @@ const AdminBookings = () => {
                 <td className="py-3 px-6 text-left">{booking.booking_id}</td>
                 <td className="py-3 px-6 text-left">{booking.room_id}</td>
                 <td className="py-3 px-6 text-left">{booking.email}</td>
-                <td className="py-3 px-6 text-left">
-                  {editBooking === booking.booking_id ? (
-                    <select
-                      value={booking.status}
-                      onChange={(e) =>
-                        setBookings((prev) =>
-                          prev.map((b) =>
-                            b.booking_id === booking.booking_id
-                              ? { ...b, status: e.target.value }
-                              : b
-                          )
-                        )
-                      }
-                      className="border border-gray-300 p-2 rounded-md"
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="confirmed">Confirmed</option>
-                      <option value="cancelled">Cancelled</option>
-                    </select>
-                  ) : (
-                    <span
-                      className={`py-1 px-2 rounded-full text-xs font-semibold ${
-                        booking.status === "confirmed"
-                          ? "bg-green-100 text-green-500"
-                          : booking.status === "pending"
-                          ? "bg-yellow-100 text-yellow-500"
-                          : "bg-red-100 text-red-500"
-                      }`}
-                    >
-                      {booking.status}
-                    </span>
-                  )}
+                <td>
+                  <span
+                    className={`py-1 px-2 rounded-full text-xs font-semibold ${
+                      booking.status === "confirmed"
+                        ? "bg-green-100 text-green-500"
+                        : booking.status === "pending"
+                        ? "bg-yellow-100 text-yellow-500"
+                        : "bg-red-100 text-red-500"
+                    }`}
+                  >
+                    {booking.status}
+                  </span>
                 </td>
+
                 <td className="py-3 px-6 text-left">
                   {new Date(booking.checkInDate).toLocaleDateString()}
                 </td>
@@ -141,68 +128,75 @@ const AdminBookings = () => {
                   {new Date(booking.checkOutDate).toLocaleDateString()}
                 </td>
                 <td className="py-3 px-6 text-left">{booking.guests}</td>
-                <td className="py-3 px-6 text-left">
-                  {editBooking === booking.booking_id ? (
-                    <input
-                      type="text"
-                      value={booking.reason}
-                      onChange={(e) =>
-                        setBookings((prev) =>
-                          prev.map((b) =>
-                            b.booking_id === booking.booking_id
-                              ? { ...b, reason: e.target.value }
-                              : b
-                          )
-                        )
-                      }
-                      className="border border-gray-300 p-2 rounded-md"
-                    />
-                  ) : (
-                    booking.reason || "N/A"
-                  )}
-                </td>
-                <td className="py-3 px-6 text-left">
-                  {editBooking === booking.booking_id ? (
-                    <input
-                      type="text"
-                      value={booking.notes}
-                      onChange={(e) =>
-                        setBookings((prev) =>
-                          prev.map((b) =>
-                            b.booking_id === booking.booking_id
-                              ? { ...b, notes: e.target.value }
-                              : b
-                          )
-                        )
-                      }
-                      className="border border-gray-300 p-2 rounded-md"
-                    />
-                  ) : (
-                    booking.notes || "N/A"
-                  )}
-                </td>
+                <td className="py-3 px-6 text-left">{booking.reason}</td>
+                <td className="py-3 px-6 text-left">{booking.notes}</td>
                 <td className="py-3 px-6 text-center">
-                  {editBooking === booking.booking_id ? (
-                    <button
-                      onClick={() => handleUpdate(booking.booking_id, booking)}
-                      className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
-                    >
-                      Save
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setEditBooking(booking.booking_id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                    >
-                      Edit
-                    </button>
-                  )}
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                    onClick={() => openModal(booking)}
+                  >
+                    Edit
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
+          <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-semibold mb-4">Edit Booking</h2>
+            <div className="mb-4">
+              <label className="block text-gray-700">Status</label>
+              <select
+                className="w-full px-3 py-2 border rounded-md"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select Status
+                </option>
+                <option value="confirmed">Confirmed</option>
+                <option value="pending">Pending</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Reason</label>
+              <input
+                type="text"
+                className="w-full px-3 py-2 border rounded-md"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Notes</label>
+              <input
+                type="text"
+                className="w-full px-3 py-2 border rounded-md"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+              />
+            </div>
+            <div className="flex justify-end space-x-2">
+              <button
+                className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition"
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+                onClick={handleEdit}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

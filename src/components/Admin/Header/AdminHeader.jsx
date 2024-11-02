@@ -16,7 +16,6 @@ export const AdminHeader = () => {
       try {
         const decodedToken = decodeToken(token); // Decoding base64 payload
         setAdmin(decodedToken); // Save decoded user info in state
-        console.log(decodedToken);
       } catch (error) {
         console.error("Error decoding token:", error);
         // Remove the invalid token from storage and redirect to login if needed
