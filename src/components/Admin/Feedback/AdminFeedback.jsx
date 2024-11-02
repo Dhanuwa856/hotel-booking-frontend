@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const AdminFeedback = () => {
-  // Sample feedback data
   const [feedbacks, setFeedbacks] = useState(null);
   const [editFeedback, setEditFeedback] = useState(null);
 
@@ -22,17 +21,36 @@ const AdminFeedback = () => {
       .catch((err) => {
         console.error("Error fetching feedback:", err);
       });
-  });
+  }, []);
 
   // Handle feedback status update
   const handleStatusChange = (id, newStatus) => {
-    const updatedFeedbacks = feedbacks.map((feedback) =>
-      feedback.feedback_id === id
-        ? { ...feedback, status: newStatus }
-        : feedback
-    );
-    setFeedbacks(updatedFeedbacks);
-    setEditFeedback(null);
+    const apiUpdateURL = `${import.meta.env.VITE_API_URL}/feedback/${id}`;
+    const token = localStorage.getItem("userToken");
+
+    axios
+      .put(
+        apiUpdateURL,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        // Update feedback status in the UI only after a successful update
+        const updatedFeedbacks = feedbacks.map((feedback) =>
+          feedback.feedback_id === id
+            ? { ...feedback, status: newStatus }
+            : feedback
+        );
+        setFeedbacks(updatedFeedbacks);
+        setEditFeedback(null);
+      })
+      .catch((err) => {
+        console.error("Error updating feedback status:", err);
+      });
   };
 
   if (!feedbacks) {
@@ -45,6 +63,7 @@ const AdminFeedback = () => {
       </div>
     );
   }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-semibold mb-8 text-gray-800">
@@ -75,25 +94,7 @@ const AdminFeedback = () => {
                 <td className="py-3 px-6 text-left">
                   {feedback.firstName} {feedback.lastName}
                 </td>
-                <td className="py-3 px-6 text-left">
-                  {editFeedback === feedback.feedback_id ? (
-                    <textarea
-                      className="border border-gray-300 p-2 rounded-md w-full"
-                      value={feedback.content}
-                      onChange={(e) =>
-                        setFeedbacks((prev) =>
-                          prev.map((fb) =>
-                            fb.feedback_id === feedback.feedback_id
-                              ? { ...fb, content: e.target.value }
-                              : fb
-                          )
-                        )
-                      }
-                    />
-                  ) : (
-                    feedback.content
-                  )}
-                </td>
+                <td className="py-3 px-6 text-left">{feedback.content}</td>
                 <td className="py-3 px-6 text-left">{feedback.rating}</td>
                 <td className="py-3 px-6 text-left">
                   {editFeedback === feedback.feedback_id ? (
@@ -144,9 +145,9 @@ const AdminFeedback = () => {
                   ) : (
                     <button
                       onClick={() => setEditFeedback(feedback.feedback_id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                      className="bg-blue-500 text-[12px] font-medium text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
                     >
-                      Edit
+                      Edit Status
                     </button>
                   )}
                 </td>

@@ -24,7 +24,7 @@ export const AdminHome = () => {
       .catch((error) => {
         console.error("Error fetching admin stats:", error);
       });
-  }, []);
+  }, [stats]);
 
   if (!stats) {
     return (

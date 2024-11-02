@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 
 const AdminUsers = () => {
   const [users, setUsers] = useState(null);
-  const [editUser, setEditUser] = useState(null);
 
   const apiGetAllUrl = `${import.meta.env.VITE_API_URL}/users/`;
 
@@ -21,13 +20,40 @@ const AdminUsers = () => {
       .catch((err) => {
         console.error("Error fetching users:", err);
       });
-  });
+  }, []);
 
-  const handleUpdate = (id, updatedUser) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => (user._id === id ? updatedUser : user))
-    );
-    setEditUser(null); // Exit edit mode
+  const toggleBlockUser = (user) => {
+    const apiUpdateURL = `${import.meta.env.VITE_API_URL}/users/block/${
+      user.email
+    }`;
+    const confirmMessage = user.disabled
+      ? `Are you sure you want to unblock ${user.firstName}?`
+      : `Are you sure you want to block ${user.firstName}?`;
+
+    if (window.confirm(confirmMessage)) {
+      const token = localStorage.getItem("userToken");
+      axios
+        .put(
+          apiUpdateURL,
+          { disabled: !user.disabled },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then(() => {
+          // Update the user's status in the state
+          setUsers((prevUsers) =>
+            prevUsers.map((u) =>
+              u.email === user.email ? { ...u, disabled: !u.disabled } : u
+            )
+          );
+        })
+        .catch((err) => {
+          console.error("Error toggling user block status:", err);
+        });
+    }
   };
 
   if (!users) {
@@ -71,117 +97,24 @@ const AdminUsers = () => {
                 <td className="py-3 px-6 text-left">{user.email}</td>
 
                 {/* First Name */}
-                <td className="py-3 px-6 text-left">
-                  {editUser === user._id ? (
-                    <input
-                      type="text"
-                      value={user.firstName}
-                      onChange={(e) =>
-                        setUsers((prev) =>
-                          prev.map((usr) =>
-                            usr._id === user._id
-                              ? { ...usr, firstName: e.target.value }
-                              : usr
-                          )
-                        )
-                      }
-                      className="border border-gray-300 p-2 rounded-md"
-                    />
-                  ) : (
-                    user.firstName
-                  )}
-                </td>
+                <td className="py-3 px-6 text-left">{user.firstName}</td>
 
                 {/* Last Name */}
-                <td className="py-3 px-6 text-left">
-                  {editUser === user._id ? (
-                    <input
-                      type="text"
-                      value={user.lastName}
-                      onChange={(e) =>
-                        setUsers((prev) =>
-                          prev.map((usr) =>
-                            usr._id === user._id
-                              ? { ...usr, lastName: e.target.value }
-                              : usr
-                          )
-                        )
-                      }
-                      className="border border-gray-300 p-2 rounded-md"
-                    />
-                  ) : (
-                    user.lastName
-                  )}
-                </td>
+                <td className="py-3 px-6 text-left">{user.lastName}</td>
 
                 {/* Phone */}
-                <td className="py-3 px-6 text-left">
-                  {editUser === user._id ? (
-                    <input
-                      type="text"
-                      value={user.phone}
-                      onChange={(e) =>
-                        setUsers((prev) =>
-                          prev.map((usr) =>
-                            usr._id === user._id
-                              ? { ...usr, phone: e.target.value }
-                              : usr
-                          )
-                        )
-                      }
-                      className="border border-gray-300 p-2 rounded-md"
-                    />
-                  ) : (
-                    user.phone
-                  )}
-                </td>
+                <td className="py-3 px-6 text-left">{user.phone}</td>
 
                 {/* WhatsApp */}
-                <td className="py-3 px-6 text-left">
-                  {editUser === user._id ? (
-                    <input
-                      type="text"
-                      value={user.whatsApp}
-                      onChange={(e) =>
-                        setUsers((prev) =>
-                          prev.map((usr) =>
-                            usr._id === user._id
-                              ? { ...usr, whatsApp: e.target.value }
-                              : usr
-                          )
-                        )
-                      }
-                      className="border border-gray-300 p-2 rounded-md"
-                    />
-                  ) : (
-                    user.whatsApp
-                  )}
-                </td>
+                <td className="py-3 px-6 text-left">{user.whatsApp}</td>
 
                 {/* Image */}
                 <td className="py-3 px-6 text-left">
-                  {editUser === user._id ? (
-                    <input
-                      type="text"
-                      value={user.image}
-                      onChange={(e) =>
-                        setUsers((prev) =>
-                          prev.map((usr) =>
-                            usr._id === user._id
-                              ? { ...usr, image: e.target.value }
-                              : usr
-                          )
-                        )
-                      }
-                      className="border border-gray-300 p-2 rounded-md"
-                    />
-                  ) : (
-                    <img
-                      src={user.image}
-                      alt={user.firstName}
-                      className="w-10 h-10 rounded-md object-cover"
-                    />
-                  )}
+                  <img
+                    src={user.image}
+                    alt={`${user.firstName} Image`}
+                    className="w-[50px] h-[50px] object-cover object-center rounded-full"
+                  />
                 </td>
 
                 {/* Type */}
@@ -207,21 +140,16 @@ const AdminUsers = () => {
 
                 {/* Actions */}
                 <td className="py-3 px-6 text-center">
-                  {editUser === user._id ? (
-                    <button
-                      onClick={() => handleUpdate(user._id, user)}
-                      className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
-                    >
-                      Save
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setEditUser(user._id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                    >
-                      Edit
-                    </button>
-                  )}
+                  <button
+                    className={` text-white px-4 py-2 rounded-md transition text-[12px] font-medium ${
+                      user.disabled === true
+                        ? "bg-green-500 hover:bg-green-600"
+                        : "bg-red-500 hover:bg-red-600"
+                    }`}
+                    onClick={() => toggleBlockUser(user)}
+                  >
+                    {user.disabled ? "Enable" : "Disable"}
+                  </button>
                 </td>
               </tr>
             ))}
