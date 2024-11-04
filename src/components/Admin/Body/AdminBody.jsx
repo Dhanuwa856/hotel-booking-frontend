@@ -16,6 +16,7 @@ import AdminFeedback from "../Feedback/AdminFeedback";
 import AdminCategories from "../Categories/AdminCategories";
 import AdminUsers from "../Users/AdminUsers";
 import AdminRooms from "../Rooms/AdminRooms";
+import AddCategories from "../AddCategories/AddCategories";
 
 function AdminBody() {
   return (
@@ -60,6 +61,7 @@ function AdminBody() {
           <Route path="/categories" element={<AdminCategories />} />
           <Route path="/users" element={<AdminUsers />} />
           <Route path="/rooms" element={<AdminRooms />} />
+          <Route path="/add-categories" element={<AddCategories />} />
         </Routes>
       </div>
     </div>

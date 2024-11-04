@@ -1,33 +1,61 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { RiDeleteBin5Fill } from "react-icons/ri";
+import { FaPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const AdminCategories = () => {
   // Sample category data
   const [categories, setCategories] = useState(null);
-  const [editCategory, setEditCategory] = useState(null);
+  const [categoriesIsLoaded, setCategoriesIsLoaded] = useState(false);
 
-  const apiGetAllUrl = `${import.meta.env.VITE_API_URL}/categories`;
+  const navigate = useNavigate();
+
+  const apiURL = `${import.meta.env.VITE_API_URL}/categories`;
+
+  const token = localStorage.getItem("userToken");
+  if (!token) {
+    window.location.href = "/login";
+  }
 
   useEffect(() => {
-    axios
-      .get(apiGetAllUrl)
-      .then((res) => {
-        setCategories(res.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching category:", err);
-      });
-  }, [apiGetAllUrl]);
+    if (!categoriesIsLoaded) {
+      axios
+        .get(apiURL)
+        .then((res) => {
+          setCategories(res.data);
+          setCategoriesIsLoaded(true);
+        })
+        .catch((err) => {
+          console.error("Error fetching category:", err);
+        });
+    }
+  }, [categoriesIsLoaded]);
 
-  // Handle category update
-  const handleUpdate = (id, updatedCategory) => {
-    setCategories((prevCategories) =>
-      prevCategories.map((category) =>
-        category._id === id ? updatedCategory : category
-      )
+  function handleDelete(name) {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete the category "${name}"?`
     );
-    setEditCategory(null); // Exit edit mode
-  };
+
+    if (confirmDelete) {
+      axios
+        .delete(`${apiURL}/${name}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          toast.success("Category deleted successfully");
+          setCategoriesIsLoaded(false);
+        })
+        .catch((err) => {
+          console.error("Error deleting category:", err);
+          alert("Failed to delete the category. Please try again.");
+        });
+    }
+  }
+
   if (!categories) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -41,6 +69,18 @@ const AdminCategories = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <Toaster position="top-right" />
+
+      <div className="fixed right-8 bottom-6">
+        <button
+          className="w-[50px] h-[50px] bg-blue-400 rounded-full text-white text-2xl flex items-center justify-center hover:bg-blue-500 transition shadow-lg z-10"
+          onClick={() => {
+            navigate("/admin/add-categories");
+          }}
+        >
+          <FaPlus />
+        </button>
+      </div>
       <h1 className="text-3xl font-semibold mb-8 text-gray-800">
         Admin Categories
       </h1>
@@ -55,6 +95,7 @@ const AdminCategories = () => {
               <th className="py-3 px-6 text-left">Features</th>
               <th className="py-3 px-6 text-left">Image</th>
               <th className="py-3 px-6 text-center">Actions</th>
+              <th className="py-3 px-6 text-center">Delete</th>
             </tr>
           </thead>
           <tbody className="text-gray-700 text-sm">
@@ -67,116 +108,43 @@ const AdminCategories = () => {
                 <td className="py-3 px-6 text-left">{category.name}</td>
 
                 {/* Price */}
-                <td className="py-3 px-6 text-left">
-                  {editCategory === category._id ? (
-                    <input
-                      type="number"
-                      value={category.price}
-                      onChange={(e) =>
-                        setCategories((prev) =>
-                          prev.map((cat) =>
-                            cat._id === category._id
-                              ? { ...cat, price: e.target.value }
-                              : cat
-                          )
-                        )
-                      }
-                      className="border border-gray-300 p-2 rounded-md"
-                    />
-                  ) : (
-                    `$${category.price}`
-                  )}
-                </td>
+                <td className="py-3 px-6 text-left">{category.price}</td>
 
                 {/* Description */}
-                <td className="py-3 px-6 text-left">
-                  {editCategory === category._id ? (
-                    <textarea
-                      value={category.description}
-                      onChange={(e) =>
-                        setCategories((prev) =>
-                          prev.map((cat) =>
-                            cat._id === category._id
-                              ? { ...cat, description: e.target.value }
-                              : cat
-                          )
-                        )
-                      }
-                      className="border border-gray-300 p-2 rounded-md w-full"
-                    />
-                  ) : (
-                    category.description
-                  )}
-                </td>
+                <td className="py-3 px-6 text-left">{category.description}</td>
 
                 {/* Features */}
                 <td className="py-3 px-6 text-left">
-                  {editCategory === category._id ? (
-                    <input
-                      type="text"
-                      value={category.features.join(", ")}
-                      onChange={(e) =>
-                        setCategories((prev) =>
-                          prev.map((cat) =>
-                            cat._id === category._id
-                              ? {
-                                  ...cat,
-                                  features: e.target.value.split(", "),
-                                }
-                              : cat
-                          )
-                        )
-                      }
-                      className="border border-gray-300 p-2 rounded-md"
-                    />
-                  ) : (
-                    category.features.join(", ")
-                  )}
+                  {category.features.map((features, i) => (
+                    <li key={i} className="list-none">
+                      {features}
+                    </li>
+                  ))}
                 </td>
 
                 {/* Image */}
                 <td className="py-3 px-6 text-left">
-                  {editCategory === category._id ? (
-                    <input
-                      type="text"
-                      value={category.image}
-                      onChange={(e) =>
-                        setCategories((prev) =>
-                          prev.map((cat) =>
-                            cat._id === category._id
-                              ? { ...cat, image: e.target.value }
-                              : cat
-                          )
-                        )
-                      }
-                      className="border border-gray-300 p-2 rounded-md"
-                    />
-                  ) : (
-                    <img
-                      src={category.image}
-                      alt={category.name}
-                      className="w-16 h-16 rounded-md object-cover"
-                    />
-                  )}
+                  <img
+                    src={category.image}
+                    alt={`${category.name} Image`}
+                    className="w-[50px] h-[50px] object-cover object-center"
+                  />
                 </td>
 
                 {/* Actions */}
                 <td className="py-3 px-6 text-center">
-                  {editCategory === category._id ? (
-                    <button
-                      onClick={() => handleUpdate(category._id, category)}
-                      className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
-                    >
-                      Save
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setEditCategory(category._id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                    >
-                      Edit
-                    </button>
-                  )}
+                  <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+                    Edit
+                  </button>
+                </td>
+                <td className="py-3 px-6 text-center text-xl text-red-500 hover:text-red-600">
+                  <button
+                    onClick={() => {
+                      handleDelete(category.name);
+                    }}
+                  >
+                    <RiDeleteBin5Fill />
+                  </button>
                 </td>
               </tr>
             ))}
