@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import "./SignUp.css";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { AiOutlineMail, AiOutlineLock, AiOutlineUser } from "react-icons/ai";
+import { BsPhone } from "react-icons/bs";
 import uploadMedia from "../../Utils/mediaUpload";
+import "./SignUp.css";
 
 function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -14,35 +16,41 @@ function SignUp() {
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [image, setImage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
   const apiUserPostUrl = import.meta.env.VITE_API_URL + "/users/";
 
   async function handleSignUp(e) {
     e.preventDefault();
+    setLoading(true);
     setErrorMessage("");
 
     if (password.length < 8) {
       setErrorMessage("Password must be at least 8 characters long.");
+      setLoading(false);
       return;
     }
     if (password !== rePassword) {
       setErrorMessage("Passwords do not match.");
+      setLoading(false);
       return;
     }
 
     try {
-      const imageUrl = await uploadMedia(image); // Uploads and gets the URL
+      const imageUrl = await uploadMedia(image);
       await axios.post(apiUserPostUrl, {
-        email: email,
-        password: password,
+        email,
+        password,
         image: imageUrl,
-        firstName: firstName,
-        lastName: lastName,
+        firstName,
+        lastName,
         whatsApp: whatsappNumber,
         phone: phoneNumber,
       });
-      window.location.href = "/login";
+      navigate("/login");
     } catch (err) {
+      setLoading(false);
       if (err.response?.data?.message?.includes("duplicate key")) {
         setErrorMessage(
           "An account with this email already exists. Please log in."
@@ -54,114 +62,153 @@ function SignUp() {
   }
 
   return (
-    <div className="sign-up-bg w-full h-screen bg-cover bg-center flex justify-center items-center relative">
-      <div className="bg-[#469ad6] w-full h-full opacity-[30%] absolute top-0 left-0"></div>
-      <div className="w-full max-w-lg bg-white/20 backdrop-blur-lg rounded-lg flex flex-col  shadow-lg py-12">
-        <h1 className="text-3xl p-4 text-white font-bold text-center">
-          Sign Up
-        </h1>
-        <form
-          className="w-full flex flex-col items-center space-y-5"
-          onSubmit={handleSignUp}
-        >
-          <div className="flex w-[80%] gap-2 items-center">
-            <input
-              autoFocus
-              type="text"
-              value={firstName}
-              onChange={(e) => {
-                setFirstName(e.target.value);
-              }}
-              required
-              placeholder="Enter your first name"
-              className="w-[80%] bg-transparent text-white placeholder-white h-[40px] border-2 border-white px-3 outline-none rounded-md focus:border-red-400 transition duration-300"
-            />
-            <input
-              type="text"
-              value={lastName}
-              onChange={(e) => {
-                setLastName(e.target.value);
-              }}
-              required
-              placeholder="Enter your last name"
-              className="w-[80%] bg-transparent text-white placeholder-white h-[40px] border-2 border-white px-3 outline-none rounded-md focus:border-red-400 transition duration-300"
-            />
-          </div>
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            required
-            placeholder="Enter your email address"
-            className="w-[80%] bg-transparent text-white placeholder-white h-[40px] border-2 border-white px-3 outline-none rounded-md focus:border-red-400 transition duration-300"
+    <div className="sign-up-bg w-full h-full bg-cover bg-top relative z-0">
+      <div className="bg-[#173146] w-full h-full opacity-[50%] absolute top-0 left-0 -z-[1]"></div>
+      <div className="mx-auto px-36 pt-2">
+        <div className="w-full mx-auto flex justify-center mt-10">
+          <img
+            src="/signup-icon.png"
+            alt="signup icon"
+            className="w-[100px] rounded-full border-4 border-black"
           />
-          <div className="flex w-[80%] gap-2 items-center">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-              required
-              placeholder="Enter your password"
-              className="w-[80%] bg-transparent text-white placeholder-white h-[40px] border-2 border-white px-3 outline-none rounded-md focus:border-red-400 transition duration-300"
-            />
-            <input
-              type="password"
-              value={rePassword}
-              onChange={(e) => {
-                setRePassword(e.target.value);
-              }}
-              required
-              placeholder="Confirm your password"
-              className="w-[80%] bg-transparent text-white placeholder-white h-[40px] border-2 border-white px-3 outline-none rounded-md focus:border-red-400 transition duration-300"
-            />
-          </div>
+        </div>
 
-          <input
-            type="text"
-            value={phoneNumber}
-            onChange={(e) => {
-              setPhoneNumber(e.target.value);
-            }}
-            required
-            placeholder="Enter your phone number"
-            className="w-[80%] bg-transparent text-white placeholder-white h-[40px] border-2 border-white px-3 outline-none rounded-md focus:border-red-400 transition duration-300"
-          />
-          <input
-            type="text"
-            value={whatsappNumber}
-            onChange={(e) => {
-              setWhatsappNumber(e.target.value);
-            }}
-            required
-            placeholder="Enter your whatsapp number"
-            className="w-[80%] bg-transparent text-white placeholder-white h-[40px] border-2 border-white px-3 outline-none rounded-md focus:border-red-400 transition duration-300"
-          />
-          {/* test */}
-          <div className="w-[80%]">
+        <form
+          onSubmit={handleSignUp}
+          className="w-[70%] mx-auto flex flex-col items-center gap-5 mt-5"
+        >
+          <div className="flex w-[70%] gap-4">
+            <div className="relative w-full">
+              <AiOutlineUser
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/80"
+                size={24}
+              />
+              <input
+                type="text"
+                required
+                placeholder="First Name"
+                autoFocus
+                className="w-full h-[50px] bg-[#aaa]/70 text-white placeholder-white px-12 rounded-[70px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+            <div className="relative w-full">
+              <AiOutlineUser
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/80"
+                size={24}
+              />
+              <input
+                type="text"
+                required
+                placeholder="Last Name"
+                className="w-full h-[50px] bg-[#aaa]/70 text-white placeholder-white px-12 rounded-[70px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="relative w-[70%]">
+            <AiOutlineMail
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/80"
+              size={24}
+            />
+            <input
+              type="email"
+              required
+              placeholder="Email Address"
+              className="w-full h-[50px] bg-[#aaa]/70 text-white placeholder-white px-12 rounded-[70px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="relative w-[70%]">
+            <BsPhone
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/80"
+              size={24}
+            />
+            <input
+              type="text"
+              required
+              placeholder="Phone Number"
+              className="w-full h-[50px] bg-[#aaa]/70 text-white placeholder-white px-12 rounded-[70px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+          </div>
+          <div className="relative w-[70%]">
+            <BsPhone
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/80"
+              size={24}
+            />
+            <input
+              type="text"
+              required
+              placeholder="WhatsApp Number"
+              className="w-full h-[50px] bg-[#aaa]/70 text-white placeholder-white px-12 rounded-[70px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={whatsappNumber}
+              onChange={(e) => setWhatsappNumber(e.target.value)}
+            />
+          </div>
+          <div className="flex w-[70%] gap-4">
+            <div className="relative w-full">
+              <AiOutlineLock
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/80"
+                size={24}
+              />
+              <input
+                type="password"
+                required
+                placeholder="Password"
+                className="w-full h-[50px] bg-[#aaa]/70 text-white placeholder-white px-12 rounded-[70px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="relative w-full">
+              <AiOutlineLock
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/80"
+                size={24}
+              />
+              <input
+                type="password"
+                required
+                placeholder="Confirm Password"
+                className="w-full h-[50px] bg-[#aaa]/70 text-white placeholder-white px-12 rounded-[70px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={rePassword}
+                onChange={(e) => setRePassword(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="w-[70%]">
             <label className="block mb-2 text-white">
-              Upload your profile image
+              Upload Profile Image
             </label>
             <input
               type="file"
               onChange={(e) => setImage(e.target.files[0])}
-              className="w-full bg-transparent text-white placeholder-white border-2 border-white px-3 py-2 rounded-md outline-none transition duration-300 focus:border-red-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-red-600 hover:file:bg-blue-200"
+              className="w-full bg-transparent text-white border-2 border-white px-3 py-2 rounded-md outline-none transition duration-300 focus:border-blue-500 file:bg-blue-100 file:text-blue-600"
             />
           </div>
+
+          <button
+            type="submit"
+            className="w-[70%] h-[50px] mt-4 bg-blue-500 hover:bg-blue-600 outline-none text-white font-semibold rounded-full transition duration-300"
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Sign Up"}
+          </button>
           {errorMessage && (
-            <div className="w-[80%] mb-4 mx-auto text-red-600 text-center font-semibold">
+            <div className="text-red-600 text-center mb-2 bg-white/60 w-[70%] py-1 rounded">
               {errorMessage}
             </div>
           )}
-          <button
-            type="submit"
-            className="w-[80%] h-[40px] bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300 font-semibold"
-          >
-            SignUp
-          </button>
+          <div className="text-white mt-1 text-center pb-3">
+            Already have an account?{" "}
+            <Link to="/login" className="underline text-blue-500">
+              Log in
+            </Link>
+          </div>
         </form>
       </div>
     </div>
