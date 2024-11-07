@@ -4,10 +4,12 @@ import { HomePage } from "./Pages/HomePage";
 import AdminPage from "./Pages/AdminPage/AdminPage";
 import Login from "./components/Login/Login";
 import SignUp from "./components/SignUp/SignUp";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
     <>
+      <Toaster position="bottom-right" />
       <Routes path="/*">
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />

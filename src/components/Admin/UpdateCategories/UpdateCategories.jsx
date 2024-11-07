@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import uploadMedia from "../../../Utils/mediaUpload";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -23,8 +23,8 @@ function UpdateCategories() {
   const apiUrl = import.meta.env.VITE_API_URL + "/categories/";
   const token = localStorage.getItem("userToken");
 
-  if (!token) {
-    window.location.href = "/login";
+  if (token == null) {
+    navigate("/login");
   }
 
   async function handleSubmit(e) {
@@ -36,7 +36,7 @@ function UpdateCategories() {
       try {
         await axios
           .put(
-            apiUrl + name,
+            `${apiUrl}${name}`,
             {
               name: name,
               price: price,
@@ -55,19 +55,21 @@ function UpdateCategories() {
             toast.success("Category updated successfully!");
 
             setLoading(false); // Stop loading
+            navigate("/admin/categories/");
           });
       } catch (err) {
         setLoading(false); // Stop loading
         toast.error(err);
         console.error(err);
       }
+      return;
     }
 
     try {
       const imgUrl = await uploadMedia(image);
       await axios
         .put(
-          apiUrl + name,
+          `${apiUrl}${name}`,
           {
             name: name,
             price: price,
@@ -82,10 +84,9 @@ function UpdateCategories() {
           }
         )
         .then((res) => {
-          // console.log("Category added successfully:", res.data);
           toast.success("Category updated successfully!");
-
           setLoading(false); // Stop loading
+          navigate("/admin/categories/");
         });
     } catch (err) {
       setLoading(false); // Stop loading
@@ -96,7 +97,6 @@ function UpdateCategories() {
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
-      <Toaster position="top-right" />
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">
         Update Category
       </h2>
@@ -117,7 +117,6 @@ function UpdateCategories() {
             } rounded-md`}
             required
           />
-          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="price">

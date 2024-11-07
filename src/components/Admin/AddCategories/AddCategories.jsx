@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import uploadMedia from "../../../Utils/mediaUpload";
+import { useNavigate } from "react-router-dom";
 
 function AddCategories() {
   const [name, setName] = useState("");
@@ -12,11 +13,13 @@ function AddCategories() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const apiUrl = import.meta.env.VITE_API_URL + "/categories/";
   const token = localStorage.getItem("userToken");
 
-  if (!token) {
-    window.location.href = "/login";
+  if (token == null) {
+    navigate("/login");
   }
 
   async function handleSubmit(e) {
@@ -43,7 +46,6 @@ function AddCategories() {
           }
         )
         .then((res) => {
-          // console.log("Category added successfully:", res.data);
           if (
             res?.data?.error?.errorResponse?.errmsg?.includes("duplicate key")
           ) {
@@ -51,6 +53,7 @@ function AddCategories() {
               "Category name already exists. Please choose a different name."
             );
           } else {
+            navigate("/admin/categories/");
           }
           setLoading(false); // Stop loading
         });
@@ -63,7 +66,6 @@ function AddCategories() {
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
-      <Toaster position="top-right" />
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">
         Add Category
       </h2>
