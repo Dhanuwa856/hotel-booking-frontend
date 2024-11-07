@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { FaPlus } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 const AdminCategories = () => {
@@ -133,9 +133,13 @@ const AdminCategories = () => {
 
                 {/* Actions */}
                 <td className="py-3 px-6 text-center">
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+                  <Link
+                    to={"/admin/update-categories"}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                    state={category}
+                  >
                     Edit
-                  </button>
+                  </Link>
                 </td>
                 <td className="py-3 px-6 text-center text-xl text-red-500 hover:text-red-600">
                   <button
