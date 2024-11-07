@@ -19,6 +19,7 @@ import AdminRooms from "../Rooms/AdminRooms";
 import AddCategories from "../AddCategories/AddCategories";
 import AdminGallery from "../Gallery/AdminGallery";
 import UpdateCategories from "../UpdateCategories/UpdateCategories";
+import AddGallery from "../AddGallery/AddGallery";
 
 function AdminBody() {
   return (
@@ -64,6 +65,7 @@ function AdminBody() {
           <Route path="/users" element={<AdminUsers />} />
           <Route path="/rooms" element={<AdminRooms />} />
           <Route path="/gallery" element={<AdminGallery />} />
+          <Route path="/add-gallery" element={<AddGallery />} />
           <Route path="/add-categories" element={<AddCategories />} />
           <Route path="/update-categories" element={<UpdateCategories />} />
         </Routes>
