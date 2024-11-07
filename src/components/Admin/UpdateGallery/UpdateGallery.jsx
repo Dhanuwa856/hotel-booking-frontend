@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import uploadMedia from "../../../Utils/mediaUpload";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function AddGallery() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+function UpdateGallery() {
+  const location = useLocation();
+  const [name, setName] = useState(location.state.name);
+  const [description, setDescription] = useState(location.state.description);
   const [images, setImages] = useState([]);
+  const [id, setId] = useState(location.state._id);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -24,15 +26,24 @@ function AddGallery() {
     setError("");
     setLoading(true);
 
-    try {
-      const uploadedImages = await Promise.all(
+    let uploadedImages = [];
+
+    // Check if there are new images to upload
+    if (images.length > 0) {
+      // Upload new images
+      uploadedImages = await Promise.all(
         images.map((image) => uploadMedia(image))
       );
+    } else {
+      // If no new images, keep the existing images
+      uploadedImages = location.state.images;
+    }
+
+    try {
       await axios
-        .post(
-          apiUrl,
+        .put(
+          `${apiUrl}${id}`,
           {
-            name: name,
             description: description,
             images: uploadedImages,
           },
@@ -44,20 +55,14 @@ function AddGallery() {
         )
         .then((res) => {
           setLoading(false);
-          toast.success("Galley item successfully added.");
           navigate("/admin/gallery/");
         });
     } catch (err) {
-      if (err?.response?.data?.message?.includes("duplicate key")) {
-        setError(
-          "Gallery item name already exists. Please use a different name."
-        );
-      } else {
-        navigate("/admin/gallery/");
-      }
       setLoading(false);
-      toast.error("Error uploading gallery item.");
+      toast.error("Error gallery item update");
     }
+    toast.success("Galley item update successfully.");
+    return;
   }
 
   function handleImageChange(e) {
@@ -67,7 +72,7 @@ function AddGallery() {
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-        Add Gallery Item
+        Update Gallery Item
       </h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -79,13 +84,13 @@ function AddGallery() {
             id="name"
             name="name"
             value={name}
+            disabled
             onChange={(e) => setName(e.target.value)}
             className={`w-full px-3 py-2 border ${
               error ? "border-red-500" : "border-gray-300"
             } rounded-md`}
             required
           />
-          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="description">
@@ -102,7 +107,7 @@ function AddGallery() {
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="images">
-            Image Upload (Multiple)
+            New Image Upload (Multiple)
           </label>
           <input
             type="file"
@@ -143,7 +148,7 @@ function AddGallery() {
               Loading...
             </span>
           ) : (
-            "Add Gallery Item"
+            "Update Gallery Item"
           )}
         </button>
       </form>
@@ -151,4 +156,4 @@ function AddGallery() {
   );
 }
 
-export default AddGallery;
+export default UpdateGallery;

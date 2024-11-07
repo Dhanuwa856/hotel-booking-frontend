@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaEdit, FaTrashAlt, FaPlus } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 function AdminGallery() {
@@ -98,9 +98,13 @@ function AdminGallery() {
                   ))}
                 </td>
                 <td className="py-3 px-6 text-center text-xl">
-                  <button className="text-blue-400 hover:text-blue-500 p-2">
+                  <Link
+                    to={"/admin/update-gallery"}
+                    className="text-blue-400 hover:text-blue-500 p-2"
+                    state={galleryItem}
+                  >
                     <FaEdit />
-                  </button>
+                  </Link>
                 </td>
                 <td className="py-3 px-6 text-center text-xl">
                   <button

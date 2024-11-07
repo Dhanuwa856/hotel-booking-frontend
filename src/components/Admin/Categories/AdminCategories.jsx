@@ -92,7 +92,7 @@ const AdminCategories = () => {
               <th className="py-3 px-6 text-left">Price</th>
               <th className="py-3 px-6 text-left">Description</th>
               <th className="py-3 px-6 text-left">Features</th>
-              <th className="py-3 px-6 text-left">Image</th>
+              <th className="py-3 px-6 text-left w-[20%]">Image</th>
               <th className="py-3 px-6 text-center">Edit</th>
               <th className="py-3 px-6 text-center">Delete</th>
             </tr>
@@ -126,7 +126,7 @@ const AdminCategories = () => {
                   <img
                     src={category.image}
                     alt={`${category.name} Image`}
-                    className="w-[50px] h-[50px] object-cover object-center"
+                    className="w-[100px] h-[100px] object-cover object-center rounded-md shadow-sm"
                   />
                 </td>
 
