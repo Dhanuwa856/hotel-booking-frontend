@@ -1,54 +1,55 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 function AdminRooms() {
   const [rooms, setRooms] = useState([]);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedRoom, setSelectedRoom] = useState(null);
-
+  const [roomsIsLoaded, setRoomsIsLoaded] = useState(false);
   const apiURL = import.meta.env.VITE_API_URL + "/rooms/";
 
   useEffect(() => {
     const token = localStorage.getItem("userToken");
-    axios
-      .get(apiURL, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        setRooms(res.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching rooms:", err);
-      });
-  }, []);
-
-  const handleDeleteClick = (room) => {
-    setSelectedRoom(room);
-    setShowDeleteModal(true);
-  };
-
-  const confirmDelete = async () => {
-    if (!selectedRoom) return;
-
-    const token = localStorage.getItem("userToken");
-    try {
-      await axios.delete(`${apiURL}${selectedRoom.roomNumber}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setRooms(
-        rooms.filter((room) => room.roomNumber !== selectedRoom.roomNumber)
-      );
-      setShowDeleteModal(false);
-      setSelectedRoom(null);
-    } catch (err) {
-      console.error("Error deleting room:", err);
+    if (!roomsIsLoaded) {
+      axios
+        .get(apiURL, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setRooms(res.data);
+          setRoomsIsLoaded(true);
+        })
+        .catch((err) => {
+          console.error("Error fetching rooms:", err);
+        });
     }
-  };
+  }, [roomsIsLoaded]);
+
+  function handleDelete(room_id) {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete the Room by id: ${room_id} ?`
+    );
+
+    if (confirmDelete) {
+      const token = localStorage.getItem("userToken");
+
+      axios
+        .delete(`${apiURL}${room_id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          toast.success(`Room number ${room_id} room deleted successfully`);
+          setRoomsIsLoaded(false);
+        })
+        .catch((err) => {
+          toast.error("Failed to delete the Room. Please try again");
+        });
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -57,16 +58,16 @@ function AdminRooms() {
         <table className="min-w-full bg-white shadow-md rounded-lg">
           <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
             <tr>
-              <th className="py-3 px-6 text-center">Room Number</th>
-              <th className="py-3 px-6 text-center">Category</th>
-              <th className="py-3 px-6 text-center">Max Guests</th>
-              <th className="py-3 px-6 text-center">Photos</th>
-              <th className="py-3 px-6 text-center">Description</th>
-              <th className="py-3 px-6 text-center">Is Available</th>
-              <th className="py-3 px-6 text-center">Price ($)</th>
-              <th className="py-3 px-6 text-center">Created At</th>
-              <th className="py-3 px-6 text-center">Edit</th>
-              <th className="py-3 px-6 text-center">Delete</th>
+              <th className="py-3 px-4 text-center w-1/12">Room ID</th>
+              <th className="py-3 px-4 text-center w-1/12">Category</th>
+              <th className="py-3 px-4 text-center w-1/12">Max Guests</th>
+              <th className="py-3 px-4 text-center w-4/12">Photos</th>
+              <th className="py-3 px-4 text-center w-3/12">Description</th>
+              <th className="py-3 px-4 text-center w-1/12">Availability</th>
+              <th className="py-3 px-4 text-center w-1/12">Price ($)</th>
+              <th className="py-3 px-4 text-center w-1/12">Created At</th>
+              <th className="py-3 px-4 text-center w-1/12">Edit</th>
+              <th className="py-3 px-4 text-center w-1/12">Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -75,21 +76,23 @@ function AdminRooms() {
                 className="border-b border-gray-200 hover:bg-gray-100 transition duration-150"
                 key={room.roomNumber}
               >
-                <td className="py-3 px-6 text-left">{room.roomNumber}</td>
-                <td className="py-3 px-6 text-left">{room.category}</td>
-                <td className="py-3 px-6 text-left">{room.maxGuests}</td>
-                <td className="py-3  text-left grid grid-cols-2 gap-2 w-auto">
+                <td className="py-3 px-4 text-left">{room.roomNumber}</td>
+                <td className="py-3 px-4 text-left">{room.category}</td>
+                <td className="py-3 px-4 text-left">{room.maxGuests}</td>
+                <td className="py-3 px-4 text-left grid grid-cols-1 gap-2">
                   {room.photos.map((photo, num) => (
                     <img
                       src={photo}
                       alt="Room Image"
                       key={num}
-                      className="h-[50px] object-cover object-center"
+                      className="w-[100px] h-[100px] object-cover rounded-md shadow-sm"
                     />
                   ))}
                 </td>
-                <td className="py-3 px-6 text-left">{room.description}</td>
-                <td className="py-3 px-6 text-left">
+                <td className="py-3 px-4 text-left whitespace-pre-line">
+                  {room.description}
+                </td>
+                <td className="py-3 px-4 text-center">
                   {room.isAvailable ? (
                     <span className="text-green-500 font-semibold">
                       Available
@@ -100,23 +103,21 @@ function AdminRooms() {
                     </span>
                   )}
                 </td>
-                <td className="py-3 px-6 text-left">{room.price}</td>
-                <td className="py-3 px-6 text-left">
-                  {" "}
+                <td className="py-3 px-4 text-center">{room.price}</td>
+                <td className="py-3 px-4 text-center">
                   {new Date(room.createdAt).toLocaleDateString()}
                 </td>
-                <td className="py-3 px-6 text-center">
-                  <button
-                    className="text-lg text-blue-500 hover:text-blue-600"
-                    onClick={() => handleEdit(room)}
-                  >
+                <td className="py-3 px-4 text-center">
+                  <button className="text-lg text-blue-500 hover:text-blue-600">
                     <FaEdit />
                   </button>
                 </td>
-                <td className="py-3 px-6 text-center">
+                <td className="py-3 px-4 text-center">
                   <button
                     className="text-lg text-red-500 hover:text-red-600"
-                    onClick={() => handleDeleteClick(room)}
+                    onClick={() => {
+                      handleDelete(room.roomNumber);
+                    }}
                   >
                     <FaTrashAlt />
                   </button>
@@ -126,33 +127,6 @@ function AdminRooms() {
           </tbody>
         </table>
       </div>
-      {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-sm">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Confirm Deletion
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to delete room number{" "}
-              <span className="font-bold">{selectedRoom.roomNumber}</span>?
-            </p>
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={() => setShowDeleteModal(false)}
-                className="px-5 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmDelete}
-                className="px-5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
