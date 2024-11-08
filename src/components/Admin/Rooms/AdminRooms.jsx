@@ -1,12 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaTrashAlt, FaPlus } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 function AdminRooms() {
   const [rooms, setRooms] = useState([]);
   const [roomsIsLoaded, setRoomsIsLoaded] = useState(false);
   const apiURL = import.meta.env.VITE_API_URL + "/rooms/";
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("userToken");
@@ -53,6 +56,16 @@ function AdminRooms() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <div className="fixed right-8 bottom-6">
+        <button
+          className="w-[50px] h-[50px] bg-blue-400 rounded-full text-white text-2xl flex items-center justify-center hover:bg-blue-500 transition shadow-lg z-10"
+          onClick={() => {
+            navigate("/admin/add-room");
+          }}
+        >
+          <FaPlus />
+        </button>
+      </div>
       <h1 className="text-3xl font-semibold mb-8 text-gray-800">Admin Rooms</h1>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white shadow-md rounded-lg">
@@ -108,9 +121,13 @@ function AdminRooms() {
                   {new Date(room.createdAt).toLocaleDateString()}
                 </td>
                 <td className="py-3 px-4 text-center">
-                  <button className="text-lg text-blue-500 hover:text-blue-600">
+                  <Link
+                    to={"/admin/update-room"}
+                    className="text-lg text-blue-500 hover:text-blue-600"
+                    state={room}
+                  >
                     <FaEdit />
-                  </button>
+                  </Link>
                 </td>
                 <td className="py-3 px-4 text-center">
                   <button
