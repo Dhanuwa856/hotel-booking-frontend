@@ -1,19 +1,24 @@
 import React, { useState } from "react";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import uploadMedia from "../../../Utils/mediaUpload";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function AddCategories() {
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState(0);
-  const [description, setDescription] = useState("");
-  const [features, setFeatures] = useState("");
+function UpdateCategories() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  if (!location.state) {
+    window.location.href = "/admin/categories";
+  }
+
+  const [name, setName] = useState(location.state.name);
+  const [price, setPrice] = useState(location.state.price);
+  const [description, setDescription] = useState(location.state.description);
+  const [features, setFeatures] = useState(location.state.features.join(","));
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const navigate = useNavigate();
 
   const apiUrl = import.meta.env.VITE_API_URL + "/categories/";
   const token = localStorage.getItem("userToken");
@@ -27,11 +32,44 @@ function AddCategories() {
     setError(""); // Clear previous error
     setLoading(true); // Start loading
 
+    if (!image) {
+      try {
+        await axios
+          .put(
+            `${apiUrl}${name}`,
+            {
+              name: name,
+              price: price,
+              description: description,
+              features: features.split(","),
+              image: location.state.image,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((res) => {
+            // console.log("Category added successfully:", res.data);
+            toast.success("Category updated successfully!");
+
+            setLoading(false); // Stop loading
+            navigate("/admin/categories/");
+          });
+      } catch (err) {
+        setLoading(false); // Stop loading
+        toast.error(err);
+        console.error(err);
+      }
+      return;
+    }
+
     try {
       const imgUrl = await uploadMedia(image);
       await axios
-        .post(
-          apiUrl,
+        .put(
+          `${apiUrl}${name}`,
           {
             name: name,
             price: price,
@@ -46,16 +84,9 @@ function AddCategories() {
           }
         )
         .then((res) => {
-          if (
-            res?.data?.error?.errorResponse?.errmsg?.includes("duplicate key")
-          ) {
-            setError(
-              "Category name already exists. Please choose a different name."
-            );
-          } else {
-            navigate("/admin/categories/");
-          }
+          toast.success("Category updated successfully!");
           setLoading(false); // Stop loading
+          navigate("/admin/categories/");
         });
     } catch (err) {
       setLoading(false); // Stop loading
@@ -67,7 +98,7 @@ function AddCategories() {
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-        Add Category
+        Update Category
       </h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -76,6 +107,7 @@ function AddCategories() {
           </label>
           <input
             type="text"
+            disabled
             id="name"
             name="name"
             value={name}
@@ -85,7 +117,6 @@ function AddCategories() {
             } rounded-md`}
             required
           />
-          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="price">
@@ -167,7 +198,7 @@ function AddCategories() {
               Loading...
             </span>
           ) : (
-            "Add Category"
+            "Update Category"
           )}
         </button>
       </form>
@@ -175,4 +206,4 @@ function AddCategories() {
   );
 }
 
-export default AddCategories;
+export default UpdateCategories;

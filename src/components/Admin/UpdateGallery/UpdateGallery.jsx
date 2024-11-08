@@ -1,21 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import uploadMedia from "../../../Utils/mediaUpload";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function AddCategories() {
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState(0);
-  const [description, setDescription] = useState("");
-  const [features, setFeatures] = useState("");
-  const [image, setImage] = useState(null);
+function UpdateGallery() {
+  const location = useLocation();
+  const [name, setName] = useState(location.state.name);
+  const [description, setDescription] = useState(location.state.description);
+  const [images, setImages] = useState([]);
+  const [id, setId] = useState(location.state._id);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-
-  const apiUrl = import.meta.env.VITE_API_URL + "/categories/";
+  const apiUrl = import.meta.env.VITE_API_URL + "/gallery/";
   const token = localStorage.getItem("userToken");
 
   if (token == null) {
@@ -24,20 +23,29 @@ function AddCategories() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError(""); // Clear previous error
-    setLoading(true); // Start loading
+    setError("");
+    setLoading(true);
+
+    let uploadedImages = [];
+
+    // Check if there are new images to upload
+    if (images.length > 0) {
+      // Upload new images
+      uploadedImages = await Promise.all(
+        images.map((image) => uploadMedia(image))
+      );
+    } else {
+      // If no new images, keep the existing images
+      uploadedImages = location.state.images;
+    }
 
     try {
-      const imgUrl = await uploadMedia(image);
       await axios
-        .post(
-          apiUrl,
+        .put(
+          `${apiUrl}${id}`,
           {
-            name: name,
-            price: price,
             description: description,
-            features: features.split(","),
-            image: imgUrl,
+            images: uploadedImages,
           },
           {
             headers: {
@@ -46,28 +54,25 @@ function AddCategories() {
           }
         )
         .then((res) => {
-          if (
-            res?.data?.error?.errorResponse?.errmsg?.includes("duplicate key")
-          ) {
-            setError(
-              "Category name already exists. Please choose a different name."
-            );
-          } else {
-            navigate("/admin/categories/");
-          }
-          setLoading(false); // Stop loading
+          setLoading(false);
+          navigate("/admin/gallery/");
         });
     } catch (err) {
-      setLoading(false); // Stop loading
-      toast.error(err);
-      console.error(err);
+      setLoading(false);
+      toast.error("Error gallery item update");
     }
+    toast.success("Galley item update successfully.");
+    return;
+  }
+
+  function handleImageChange(e) {
+    setImages([...e.target.files]);
   }
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-        Add Category
+        Update Gallery Item
       </h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -79,25 +84,11 @@ function AddCategories() {
             id="name"
             name="name"
             value={name}
+            disabled
             onChange={(e) => setName(e.target.value)}
             className={`w-full px-3 py-2 border ${
               error ? "border-red-500" : "border-gray-300"
             } rounded-md`}
-            required
-          />
-          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="price">
-            Price
-          </label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
             required
           />
         </div>
@@ -115,26 +106,16 @@ function AddCategories() {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Features</label>
-          <div className="flex items-center mb-2">
-            <input
-              type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              value={features}
-              onChange={(e) => setFeatures(e.target.value)}
-            />
-          </div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="image">
-            Image Upload
+          <label className="block text-gray-700 mb-2" htmlFor="images">
+            New Image Upload (Multiple)
           </label>
           <input
             type="file"
-            id="image"
-            name="image"
+            id="images"
+            name="images"
             className="w-full"
-            onChange={(e) => setImage(e.target.files[0])}
+            onChange={handleImageChange}
+            multiple
           />
         </div>
         <button
@@ -167,7 +148,7 @@ function AddCategories() {
               Loading...
             </span>
           ) : (
-            "Add Category"
+            "Update Gallery Item"
           )}
         </button>
       </form>
@@ -175,4 +156,4 @@ function AddCategories() {
   );
 }
 
-export default AddCategories;
+export default UpdateGallery;

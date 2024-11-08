@@ -2,8 +2,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { FaPlus } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { FaEdit } from "react-icons/fa";
 
 const AdminCategories = () => {
   // Sample category data
@@ -69,8 +70,6 @@ const AdminCategories = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Toaster position="top-right" />
-
       <div className="fixed right-8 bottom-6">
         <button
           className="w-[50px] h-[50px] bg-blue-400 rounded-full text-white text-2xl flex items-center justify-center hover:bg-blue-500 transition shadow-lg z-10"
@@ -93,8 +92,8 @@ const AdminCategories = () => {
               <th className="py-3 px-6 text-left">Price</th>
               <th className="py-3 px-6 text-left">Description</th>
               <th className="py-3 px-6 text-left">Features</th>
-              <th className="py-3 px-6 text-left">Image</th>
-              <th className="py-3 px-6 text-center">Actions</th>
+              <th className="py-3 px-6 text-left w-[20%]">Image</th>
+              <th className="py-3 px-6 text-center">Edit</th>
               <th className="py-3 px-6 text-center">Delete</th>
             </tr>
           </thead>
@@ -127,15 +126,19 @@ const AdminCategories = () => {
                   <img
                     src={category.image}
                     alt={`${category.name} Image`}
-                    className="w-[50px] h-[50px] object-cover object-center"
+                    className="w-[100px] h-[100px] object-cover object-center rounded-md shadow-sm"
                   />
                 </td>
 
                 {/* Actions */}
                 <td className="py-3 px-6 text-center">
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
-                    Edit
-                  </button>
+                  <Link
+                    to={"/admin/update-categories"}
+                    state={category}
+                    className="text-xl text-blue-500 hover:text-blue-600"
+                  >
+                    <FaEdit />
+                  </Link>
                 </td>
                 <td className="py-3 px-6 text-center text-xl text-red-500 hover:text-red-600">
                   <button
