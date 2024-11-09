@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const AdminFeedback = () => {
   const [feedbacks, setFeedbacks] = useState(null);
   const [editFeedback, setEditFeedback] = useState(null);
+  const [feedbackIsLoaded, setFeedbackIsLoaded] = useState(false);
 
   const apiGetAllUrl = `${import.meta.env.VITE_API_URL}/feedback/all`;
 
@@ -17,11 +19,12 @@ const AdminFeedback = () => {
       })
       .then((res) => {
         setFeedbacks(res.data.feedback);
+        setFeedbackIsLoaded(true);
       })
       .catch((err) => {
         console.error("Error fetching feedback:", err);
       });
-  }, []);
+  }, [feedbackIsLoaded]);
 
   // Handle feedback status update
   const handleStatusChange = (id, newStatus) => {
@@ -47,9 +50,11 @@ const AdminFeedback = () => {
         );
         setFeedbacks(updatedFeedbacks);
         setEditFeedback(null);
+        setFeedbackIsLoaded(false);
+        toast.success("Feedback status update successfully!");
       })
       .catch((err) => {
-        console.error("Error updating feedback status:", err);
+        toast.error("Error updating feedback status:", err);
       });
   };
 
@@ -71,11 +76,12 @@ const AdminFeedback = () => {
       </h1>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white shadow-md rounded-lg">
+        <table className="w-auto bg-white shadow-md rounded-xl">
           <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
             <tr>
               <th className="py-3 px-6 text-left">Feedback ID</th>
               <th className="py-3 px-6 text-left">Email</th>
+              <th className="py-3 px-6 text-left">User Image</th>
               <th className="py-3 px-6 text-left">Name</th>
               <th className="py-3 px-6 text-left">Content</th>
               <th className="py-3 px-6 text-left">Rating</th>
@@ -91,6 +97,13 @@ const AdminFeedback = () => {
               >
                 <td className="py-3 px-6 text-left">{feedback.feedback_id}</td>
                 <td className="py-3 px-6 text-left">{feedback.email}</td>
+                <td className="py-3 px-6 text-left">
+                  <img
+                    src={feedback.image}
+                    alt="user image"
+                    className="w-[50px] h-[50px] rounded-md object-cover shadow-sm"
+                  />
+                </td>
                 <td className="py-3 px-6 text-left">
                   {feedback.firstName} {feedback.lastName}
                 </td>

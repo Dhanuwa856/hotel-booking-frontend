@@ -3,10 +3,10 @@ import { FaRegBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { MdLogout } from "react-icons/md";
 import decodeToken from "../../decodeToken";
+import toast from "react-hot-toast";
 
 export const AdminHeader = () => {
   const [admin, setAdmin] = useState(null);
-  const [logoutMessage, setLogoutMessage] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,13 +32,8 @@ export const AdminHeader = () => {
     if (confirmLogout) {
       localStorage.removeItem("userToken"); // Remove token on logout
       setAdmin(null);
-      setLogoutMessage(true); // Show the logout message
+      toast.success("You have been logged out successfully");
       navigate("/"); // Redirect to home after logout
-
-      // Hide the message after 3 seconds
-      setTimeout(() => {
-        setLogoutMessage(false);
-      }, 3000);
     }
     // If the user cancels, do nothing and stay on the same page
   };
@@ -77,11 +72,6 @@ export const AdminHeader = () => {
               <MdLogout />
             </button>
           </>
-        )}
-        {logoutMessage && (
-          <div className="fixed bottom-10 right-4 bg-gray-800 text-white py-2 px-4 rounded shadow-lg z-[100]">
-            You have been logged out successfully.
-          </div>
         )}
       </div>
     </header>

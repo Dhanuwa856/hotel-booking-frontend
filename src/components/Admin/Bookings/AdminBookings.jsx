@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FaEdit } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 const AdminBookings = () => {
   const [bookings, setBookings] = useState();
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [bookingsIsLoaded, setBookingIsLoaded] = useState(false);
   const [status, setStatus] = useState("");
   const [reason, setReason] = useState("");
   const [notes, setNotes] = useState("");
@@ -23,11 +26,12 @@ const AdminBookings = () => {
       })
       .then((res) => {
         setBookings(res.data);
+        setBookingIsLoaded(true);
       })
       .catch((err) => {
         console.error("Error fetching bookings:", err);
       });
-  }, []);
+  }, [bookingsIsLoaded]);
 
   const openModal = (booking) => {
     setSelectedBooking(booking);
@@ -59,6 +63,8 @@ const AdminBookings = () => {
           )
         );
         setShowModal(false); // Close modal after success
+        setBookingIsLoaded(false);
+        toast.success("Booking Update Successfully!");
       })
       .catch((err) => {
         console.error("Error updating booking:", err);
@@ -89,7 +95,8 @@ const AdminBookings = () => {
               <th className="py-3 px-6 text-left">Booking ID</th>
               <th className="py-3 px-6 text-left">Room ID</th>
               <th className="py-3 px-6 text-left">Email</th>
-              <th className="py-3 px-6 text-left">Status</th>
+              <th className="py-3 px-6 text-center">Phone</th>
+              <th className="py-3 px-6 text-center">Status</th>
               <th className="py-3 px-6 text-left">Check-in Date</th>
               <th className="py-3 px-6 text-left">Check-out Date</th>
               <th className="py-3 px-6 text-left">Guests</th>
@@ -107,7 +114,8 @@ const AdminBookings = () => {
                 <td className="py-3 px-6 text-left">{booking.booking_id}</td>
                 <td className="py-3 px-6 text-left">{booking.room_id}</td>
                 <td className="py-3 px-6 text-left">{booking.email}</td>
-                <td>
+                <td className="py-3 px-6 text-center">{booking.phone}</td>
+                <td className="text-center">
                   <span
                     className={`py-1 px-2 rounded-full text-xs font-semibold ${
                       booking.status === "confirmed"
@@ -132,10 +140,10 @@ const AdminBookings = () => {
                 <td className="py-3 px-6 text-left">{booking.notes}</td>
                 <td className="py-3 px-6 text-center">
                   <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                    className="text-blue-500 text-lg  hover:text-blue-600 transition"
                     onClick={() => openModal(booking)}
                   >
-                    Edit
+                    <FaEdit />
                   </button>
                 </td>
               </tr>

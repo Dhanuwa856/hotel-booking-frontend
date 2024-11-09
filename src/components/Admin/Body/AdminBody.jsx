@@ -59,7 +59,7 @@ function AdminBody() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 bg-[#F1F5F9] p-6 overflow-scroll w-[75%] ">
+      <div className="flex-1 bg-[#F1F5F9] p-6 overflow-scroll w-[80%] ">
         <Routes path="/*">
           <Route path="/" element={<AdminHome />} />
           <Route path="/bookings" element={<AdminBookings />} />

@@ -10,6 +10,7 @@ function AddRoom() {
   const [category, setCategory] = useState(location.state.category);
   const [maxGuests, setMaxGuests] = useState(location.state.maxGuests);
   const [description, setDescription] = useState(location.state.description);
+  const [available, setAvailable] = useState(location.state.isAvailable);
   const [price, setPrice] = useState(location.state.price);
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
@@ -50,6 +51,7 @@ function AddRoom() {
             maxGuests,
             description,
             price,
+            isAvailable: available,
             photos: uploadedImages,
           },
           {
@@ -105,6 +107,21 @@ function AddRoom() {
             <option value="Standard">Standard</option>
             <option value="Deluxe">Deluxe</option>
             <option value="Luxury">Luxury</option>
+          </select>
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="availability">
+            Availability
+          </label>
+          <select
+            id="availability"
+            value={available}
+            onChange={(e) => setAvailable(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            required
+          >
+            <option value="true">Available</option>
+            <option value="false">Unavailable</option>
           </select>
         </div>
 

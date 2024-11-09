@@ -4,14 +4,23 @@ import { LuUsers } from "react-icons/lu";
 import { FaClipboardList, FaCheckCircle, FaClock } from "react-icons/fa"; // Additional icons
 import CircularProgress from "../CircularProgress/CircularProgress";
 import axios from "axios";
+import decodeToken from "../../decodeToken";
+import { useNavigate } from "react-router-dom";
 
 export const AdminHome = () => {
   const [stats, setStats] = useState(null);
 
   const apiUrl = import.meta.env.VITE_API_URL + "/users/stats";
+  const token = localStorage.getItem("userToken");
+  const navigate = useNavigate();
+
+  const user = decodeToken(token);
+
+  if (user.type == "customer") {
+    window.location.href = "/";
+  }
 
   useEffect(() => {
-    const token = localStorage.getItem("userToken");
     axios
       .get(apiUrl, {
         headers: {
