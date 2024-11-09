@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 function AdminGallery() {
-  const [galleryItems, setGalleryItems] = useState([]);
+  const [galleryItems, setGalleryItems] = useState(null);
   const [galleryIsLoaded, setGalleryIsLoaded] = useState(false);
 
   const navigate = useNavigate();
@@ -51,6 +51,16 @@ function AdminGallery() {
           toast.error("Failed to delete the gallery item. Please try again");
         });
     }
+  }
+  if (!galleryItems) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="flex items-center space-x-2">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <p className="text-lg font-semibold text-gray-700">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (

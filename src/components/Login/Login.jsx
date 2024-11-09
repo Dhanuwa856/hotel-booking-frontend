@@ -31,6 +31,7 @@ function Login() {
           navigate("/admin");
         } else {
           navigate("/");
+          // pass;
         }
       })
       .catch((err) => {
@@ -73,7 +74,7 @@ function Login() {
         </div>
         <form
           onSubmit={handleLogin}
-          className="w-[50%] mx-auto flex flex-col items-center gap-5"
+          className="w-[45%] mx-auto flex flex-col items-center gap-5"
         >
           <div className="relative w-[70%] mt-10">
             <AiOutlineMail

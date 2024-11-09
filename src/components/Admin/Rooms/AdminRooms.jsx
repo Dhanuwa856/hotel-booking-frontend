@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
 function AdminRooms() {
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState(null);
   const [roomsIsLoaded, setRoomsIsLoaded] = useState(false);
   const apiURL = import.meta.env.VITE_API_URL + "/rooms/";
 
@@ -52,6 +52,17 @@ function AdminRooms() {
           toast.error("Failed to delete the Room. Please try again");
         });
     }
+  }
+
+  if (!rooms) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="flex items-center space-x-2">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <p className="text-lg font-semibold text-gray-700">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
