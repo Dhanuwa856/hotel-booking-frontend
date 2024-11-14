@@ -6,6 +6,8 @@ import Login from "./components/Login/Login";
 import SignUp from "./components/SignUp/SignUp";
 import { Toaster } from "react-hot-toast";
 import UserGallery from "./components/User/UserGallery/UserGallery";
+import UserInfoUpdate from "./components/User/UserInfoUpdate/UserInfoUpdate";
+import UserGalleryItem from "./components/User/UserGalleryItem/UserGalleryItem";
 
 const App = () => {
   return (
@@ -16,6 +18,8 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/gallery" element={<UserGallery />} />
+        <Route path="/gallery/gallery-item" element={<UserGalleryItem />} />
+        <Route path="/user-update" element={<UserInfoUpdate />} />
         <Route path="/admin/*" element={<AdminPage />} />
       </Routes>
     </>

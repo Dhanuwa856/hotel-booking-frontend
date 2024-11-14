@@ -124,9 +124,13 @@ function NavBar() {
                   <h2 className="text-white text-center text-xl mt-2 font-medium">
                     Hi, {user.firstName}!
                   </h2>
-                  <button className="px-10 py-2 border border-gray-400 rounded-[70px] text-white mt-3 w-[80%] text-sm capitalize hover:bg-white/5 transition delay-75 flex items-center justify-center gap-2 ">
+                  <Link
+                    to={"/user-update"}
+                    state={user}
+                    className="px-10 py-2 border border-gray-400 rounded-[70px] text-white mt-3 w-[80%] text-sm capitalize hover:bg-white/5 transition delay-75 flex items-center justify-center gap-2 "
+                  >
                     <FaUserEdit /> Manage User Account
-                  </button>
+                  </Link>
                   <button className="px-10 py-2 border border-gray-400 rounded-[70px] text-white mt-3 w-[80%] text-sm capitalize hover:bg-white/5 transition delay-75 flex items-center justify-center gap-2">
                     <CgLoadbarDoc /> your bookings
                   </button>
