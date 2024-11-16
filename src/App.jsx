@@ -9,6 +9,7 @@ import UserGallery from "./components/User/UserGallery/UserGallery";
 import UserInfoUpdate from "./components/User/UserInfoUpdate/UserInfoUpdate";
 import UserGalleryItem from "./components/User/UserGalleryItem/UserGalleryItem";
 import UserRooms from "./components/User/UserRooms/UserRooms";
+import UserBookingPage from "./components/User/UserBookingPage/UserBookingPage";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/gallery" element={<UserGallery />} />
         <Route path="/gallery/gallery-item" element={<UserGalleryItem />} />
         <Route path="/rooms" element={<UserRooms />} />
+        <Route path="/rooms/booking" element={<UserBookingPage />} />
         <Route path="/user-update" element={<UserInfoUpdate />} />
         <Route path="/admin/*" element={<AdminPage />} />
       </Routes>

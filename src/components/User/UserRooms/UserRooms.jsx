@@ -3,9 +3,10 @@ import NavBar from "../../NavBar/NavBar";
 import "./UserRooms.css";
 import axios from "axios";
 import { GoDotFill } from "react-icons/go";
+import { Link } from "react-router-dom";
 
 function UserRooms() {
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState("");
   const [categories, setCategories] = useState([]);
   const [roomsIsLoaded, setRoomsIsLoaded] = useState(false);
   const [hoveredRoom, setHoveredRoom] = useState(null);
@@ -45,6 +46,20 @@ function UserRooms() {
         console.error("Error fetching categories:", err);
       });
   }, [roomsIsLoaded]);
+
+  if (!rooms) {
+    return (
+      <>
+        <NavBar />
+        <div className="flex justify-center items-center h-screen bg-gray-100">
+          <div className="flex items-center space-x-2">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+            <p className="text-lg font-semibold text-gray-700">Loading...</p>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -115,9 +130,13 @@ function UserRooms() {
                     ${room.price}
                     <span className="text-sm font-normal">/ night</span>
                   </div>
-                  <button className="bg-[#FF6F61] hover:bg-[#FF5E54] text-white font-medium px-4 py-2 rounded-lg absolute bottom-2 right-5">
+                  <Link
+                    to={"/rooms/booking"}
+                    state={room}
+                    className="bg-[#FF6F61] hover:bg-[#FF5E54] text-white font-medium px-4 py-2 rounded-lg absolute bottom-2 right-5 "
+                  >
                     Book Now
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
