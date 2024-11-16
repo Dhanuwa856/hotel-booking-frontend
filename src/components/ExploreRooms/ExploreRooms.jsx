@@ -1,68 +1,67 @@
 import { useState } from "react";
 
-// const rooms = [
-//   {
-//     id: 1,
-//     name: "Standard Room",
-//     description: "Cozy room with essential amenities for a comfortable stay.",
-//     image:
-//       "https://media.cnn.com/api/v1/images/stellar/prod/1-atr-royalmansion-bedroom2-mr.jpg?c=original",
-//     maxGuests: 2,
-//     size: "25 m²",
-//     amenities: ["Wi-Fi", "Air Conditioning", "TV"],
-//     price: 99,
-//   },
-//   {
-//     id: 2,
-//     name: "Deluxe Room",
-//     description: "Spacious room with modern amenities and a beautiful view.",
-//     image:
-//       "https://t3.ftcdn.net/jpg/06/19/00/08/360_F_619000872_AxiwLsfQqRHMkNxAbN4l5wg1MsPgBsmo.jpg",
-//     maxGuests: 3,
-//     size: "35 m²",
-//     amenities: ["Wi-Fi", "Air Conditioning", "Mini Bar", "Work Desk"],
-//     price: 149,
-//   },
-//   {
-//     id: 3,
-//     name: "Suite",
-//     description:
-//       "Luxurious suite with separate living area and premium amenities.",
-//     image:
-//       "https://cdn.loewshotels.com/loewshotels.com-2466770763/cms/cache/v2/5f5a6e0d12749.jpg/1920x1080/fit/80/86e685af18659ee9ecca35c465603812.jpg",
-//     maxGuests: 4,
-//     size: "50 m²",
-//     amenities: [
-//       "Wi-Fi",
-//       "Air Conditioning",
-//       "Mini Bar",
-//       "Bathtub",
-//       "City View",
-//     ],
-//     price: 249,
-//   },
-//   {
-//     id: 4,
-//     name: "Family Room",
-//     description:
-//       "Perfect for families, with ample space and child-friendly features.",
-//     image:
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3_Z0swSYMHYpWAKqlc3UFUwVXxwM38APq0Q&s",
-//     maxGuests: 5,
-//     size: "45 m²",
-//     amenities: [
-//       "Wi-Fi",
-//       "Air Conditioning",
-//       "Kitchenette",
-//       "Children's Play Area",
-//     ],
-//     price: 199,
-//   },
-// ];
+const rooms = [
+  {
+    id: 1,
+    name: "Standard Room",
+    description: "Cozy room with essential amenities for a comfortable stay.",
+    image:
+      "https://media.cnn.com/api/v1/images/stellar/prod/1-atr-royalmansion-bedroom2-mr.jpg?c=original",
+    maxGuests: 2,
+    size: "25 m²",
+    amenities: ["Wi-Fi", "Air Conditioning", "TV"],
+    price: 99,
+  },
+  {
+    id: 2,
+    name: "Deluxe Room",
+    description: "Spacious room with modern amenities and a beautiful view.",
+    image:
+      "https://t3.ftcdn.net/jpg/06/19/00/08/360_F_619000872_AxiwLsfQqRHMkNxAbN4l5wg1MsPgBsmo.jpg",
+    maxGuests: 3,
+    size: "35 m²",
+    amenities: ["Wi-Fi", "Air Conditioning", "Mini Bar", "Work Desk"],
+    price: 149,
+  },
+  {
+    id: 3,
+    name: "Suite",
+    description:
+      "Luxurious suite with separate living area and premium amenities.",
+    image:
+      "https://cdn.loewshotels.com/loewshotels.com-2466770763/cms/cache/v2/5f5a6e0d12749.jpg/1920x1080/fit/80/86e685af18659ee9ecca35c465603812.jpg",
+    maxGuests: 4,
+    size: "50 m²",
+    amenities: [
+      "Wi-Fi",
+      "Air Conditioning",
+      "Mini Bar",
+      "Bathtub",
+      "City View",
+    ],
+    price: 249,
+  },
+  {
+    id: 4,
+    name: "Family Room",
+    description:
+      "Perfect for families, with ample space and child-friendly features.",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3_Z0swSYMHYpWAKqlc3UFUwVXxwM38APq0Q&s",
+    maxGuests: 5,
+    size: "45 m²",
+    amenities: [
+      "Wi-Fi",
+      "Air Conditioning",
+      "Kitchenette",
+      "Children's Play Area",
+    ],
+    price: 199,
+  },
+];
 
 export default function ExploreRooms() {
   const [hoveredRoom, setHoveredRoom] = useState(null);
-  const [rooms, setRooms] = useState([]);
 
   return (
     <section className="bg-[#E3F2FD] py-16">
