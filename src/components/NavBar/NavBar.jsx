@@ -131,9 +131,12 @@ function NavBar() {
                   >
                     <FaUserEdit /> Manage User Account
                   </Link>
-                  <button className="px-10 py-2 border border-gray-400 rounded-[70px] text-white mt-3 w-[80%] text-sm capitalize hover:bg-white/5 transition delay-75 flex items-center justify-center gap-2">
+                  <Link
+                    to={"/customer-booking"}
+                    className="px-10 py-2 border border-gray-400 rounded-[70px] text-white mt-3 w-[80%] text-sm capitalize hover:bg-white/5 transition delay-75 flex items-center justify-center gap-2"
+                  >
                     <CgLoadbarDoc /> your bookings
-                  </button>
+                  </Link>
                   <button className="px-10 py-2 border border-gray-400 rounded-[70px] text-white mt-3 w-[80%] text-sm capitalize hover:bg-white/5 transition delay-75 flex items-center gap-2 justify-center">
                     <IoMdSettings /> settings
                   </button>
