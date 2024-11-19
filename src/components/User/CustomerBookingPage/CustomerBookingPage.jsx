@@ -4,14 +4,15 @@ import NavBar from "../../NavBar/NavBar";
 import toast from "react-hot-toast";
 
 const CustomerBookingPage = () => {
-  const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] = useState(null);
   const [bookingIsLoaded, setBookingIsLoaded] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const apiURL = `${import.meta.env.VITE_API_URL}/booking/`;
 
   useEffect(() => {
     const token = localStorage.getItem("userToken");
+    setLoading(true);
     axios
       .get(apiURL, {
         headers: {
@@ -21,6 +22,7 @@ const CustomerBookingPage = () => {
       .then((res) => {
         setBookings(res.data.bookings);
         setBookingIsLoaded(true);
+        setLoading(false);
       })
       .catch((err) => {
         console.error("Error fetching bookings:", err);
@@ -55,10 +57,26 @@ const CustomerBookingPage = () => {
     }
   }
 
-  // if (loading) return <p className="text-center">Loading...</p>;
+  // if (loading)
+  //   return (
+  //     <div className="flex justify-center items-center h-screen bg-gray-100">
+  //       <div className="flex items-center space-x-2">
+  //         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+  //         <p className="text-lg font-semibold text-gray-700">Loading...</p>
+  //       </div>
+  //     </div>
+  //   );
 
-  if (!bookings)
-    return <p className="text-center text-red-500">Booking not found</p>;
+  if (!bookings || bookings.length === 0) {
+    return (
+      <>
+        <NavBar />
+        <div className="text-red-500 mt-5 text-lg max-w-5xl mx-auto">
+          You have not booked a room yet.
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -78,6 +96,7 @@ const CustomerBookingPage = () => {
                 <th className="py-3 px-6 text-left">guests</th>
                 <th className="py-3 px-6 text-left">Status</th>
                 <th className="py-3 px-6 text-left">Timestamp</th>
+                <th className="py-3 px-6 text-left">Notes</th>
                 <th className="py-3 px-6 text-center">Actions</th>
               </tr>
             </thead>
@@ -112,6 +131,7 @@ const CustomerBookingPage = () => {
                   <td className="py-3 px-6 text-left">
                     {new Date(booking.timeStamp).toLocaleString()}
                   </td>
+                  <td className="py-3 px-6 text-left">{booking.notes}</td>
                   <td className="py-3 px-6 text-center">
                     <button
                       onClick={() => {
