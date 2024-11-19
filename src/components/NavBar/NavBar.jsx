@@ -10,6 +10,7 @@ import { IoClose } from "react-icons/io5";
 import { FaUserEdit } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { CgLoadbarDoc } from "react-icons/cg";
+import Swal from "sweetalert2";
 
 function NavBar() {
   const [user, setUser] = useState(null);
@@ -44,16 +45,32 @@ function NavBar() {
   }, [navigate]);
 
   const handleLogout = () => {
-    // Ask for logout confirmation
-    const confirmLogout = window.confirm("Are you sure you want to log out?");
+    // Show SweetAlert2 confirmation popup
+    Swal.fire({
+      title: "Are you sure you want to log out?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, log out!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Clear token and user state on logout
+        localStorage.removeItem("userToken"); // Remove token
+        setUser(null); // Clear user state (make sure `setUser` is defined in your context or state)
 
-    if (confirmLogout) {
-      localStorage.removeItem("userToken"); // Remove token on logout
-      setUser(null);
-      toast.success("You have been logged out successfully.");
-      navigate("/"); // Redirect to home after logout
-    }
-    // If the user cancels, do nothing and stay on the same page
+        // Show success message
+        toast.success("You have been logged out successfully.", {
+          duration: 3000,
+          position: "top-right",
+        });
+
+        // Redirect to home page
+        navigate("/"); // Make sure `navigate` is initialized using `useNavigate` from `react-router-dom`
+      }
+      // If the user cancels, no action is performed
+    });
   };
 
   const handleUserInfo = () => {

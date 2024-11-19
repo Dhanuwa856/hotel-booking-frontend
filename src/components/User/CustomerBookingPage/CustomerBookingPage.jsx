@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NavBar from "../../NavBar/NavBar";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const CustomerBookingPage = () => {
   const [bookings, setBookings] = useState(null);
@@ -32,29 +33,47 @@ const CustomerBookingPage = () => {
   function handleCancel(bookingId) {
     const token = localStorage.getItem("userToken");
 
-    const confirmCancel = window.confirm(
-      `Are you sure you want to cancel the booking "${bookingId}"?`
-    );
-
-    if (confirmCancel) {
-      axios
-        .put(
-          `${apiURL}cancel/${bookingId}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          toast.success("Booking Canceld successfully");
-          setBookingIsLoaded(false);
-        })
-        .catch((err) => {
-          toast.error("Failed to cancel the booking. Please try again.");
-        });
+    if (!token) {
+      toast.error("You need to log in to cancel the booking.");
+      return;
     }
+
+    // Show SweetAlert2 confirmation popup
+    Swal.fire({
+      title: `Are you sure you want to cancel the booking "${bookingId}"?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, cancel it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .put(
+            `${apiURL}cancel/${bookingId}`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((res) => {
+            toast.success("Booking canceled successfully.", {
+              duration: 3000,
+              position: "top-right",
+            });
+            setBookingIsLoaded(false); // Assuming this is used to trigger UI refresh or reload
+          })
+          .catch((err) => {
+            toast.error("Failed to cancel the booking. Please try again.", {
+              duration: 3000,
+              position: "top-right",
+            });
+          });
+      }
+    });
   }
 
   // if (loading)
