@@ -90,10 +90,11 @@ const Header = () => {
 
   return (
     <div className="bg-[#E3F2FD] w-full h-screen">
-      <div className="header w-full h-full relative">
+      <div className="header w-full h-full bg-no-repeat bg-cover relative">
         <div className="header-bg-filter w-full h-full absolute bg-[#469ad6] opacity-[30%] left-0 top-0"></div>
-        <div className="absolute input-area backdrop-blur-lg w-[40%] mt-[20px] left-1/2 -translate-x-1/2 rounded-lg px-[50px] py-[50px] shadow-2xl">
-          <h2 className="text-3xl font-bold text-[#021c2e] mb-4 capitalize">
+
+        <div className="absolute input-area backdrop-blur-lg w-full sm:w-[50%] md:w-[40%] lg:w-[30%] mt-[20px] left-1/2 -translate-x-1/2 rounded-lg px-[20px] sm:px-[40px] md:px-[50px] py-[30px] shadow-2xl">
+          <h2 className="text-3xl font-bold text-[#021c2e] mb-4 capitalize text-center sm:text-left">
             Book Your Stay
           </h2>
           <form onSubmit={handleSubmit}>
