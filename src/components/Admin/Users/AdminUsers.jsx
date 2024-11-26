@@ -72,14 +72,14 @@ const AdminUsers = () => {
       <h1 className="text-3xl font-semibold mb-8 text-gray-800">Admin Users</h1>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white shadow-md rounded-lg">
+        <table className="w-auto bg-white shadow-md rounded-lg">
           <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
             <tr>
               <th className="py-3 px-6 text-left">Email</th>
               <th className="py-3 px-6 text-left">First Name</th>
               <th className="py-3 px-6 text-left">Last Name</th>
               <th className="py-3 px-6 text-left">Phone</th>
-              <th className="py-3 px-6 text-left">WhatsApp</th>
+              {/* <th className="py-3 px-6 text-left">WhatsApp</th> */}
               <th className="py-3 px-6 text-left">Image</th>
               <th className="py-3 px-6 text-left">Type</th>
               <th className="py-3 px-6 text-left">Disabled</th>
@@ -106,7 +106,7 @@ const AdminUsers = () => {
                 <td className="py-3 px-6 text-left">{user.phone}</td>
 
                 {/* WhatsApp */}
-                <td className="py-3 px-6 text-left">{user.whatsApp}</td>
+                {/* <td className="py-3 px-6 text-left">{user.whatsApp}</td> */}
 
                 {/* Image */}
                 <td className="py-3 px-6 text-left">
