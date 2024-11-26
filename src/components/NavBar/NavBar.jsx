@@ -85,7 +85,7 @@ function NavBar() {
         <nav
           className={`${
             showMobileMenu
-              ? "fixed top-0 right-0 w-[70%] h-full bg-white z-50 shadow-lg transition-transform transform translate-x-0 border-[#ca5146] border-2 md:border-0"
+              ? "fixed top-0 right-0 w-[70%] h-full bg-white z-50 shadow-lg transition-transform transform translate-x-0 md:border-0"
               : "fixed top-0 right-0 w-[70%] h-full  z-50 transition-transform transform translate-x-full"
           } md:static md:flex md:w-auto md:h-auto md:translate-x-0 items-center gap-4 text-[#607D8B]`}
         >
