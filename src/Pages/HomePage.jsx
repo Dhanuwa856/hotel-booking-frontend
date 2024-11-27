@@ -8,7 +8,7 @@ export const HomePage = () => {
     <>
       <NavBar />
       <Header />
-      <ExploreRooms />
+      {/* <ExploreRooms /> */}
     </>
   );
 };

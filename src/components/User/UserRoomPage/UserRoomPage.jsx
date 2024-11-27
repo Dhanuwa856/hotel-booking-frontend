@@ -20,7 +20,6 @@ function UserRoomPage() {
         <p className="text-center text-[#021c2e] mb-5">
           Comfort and luxury in every room
         </p>
-        {/* <RoomCard /> */}
       </div>
       <RoomCard />
     </>

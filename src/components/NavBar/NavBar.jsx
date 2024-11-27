@@ -12,6 +12,7 @@ import { IoMdSettings } from "react-icons/io";
 import { CgLoadbarDoc } from "react-icons/cg";
 import Swal from "sweetalert2";
 import { RiMenu2Fill } from "react-icons/ri";
+import { MdVerified } from "react-icons/md";
 
 function NavBar() {
   const [user, setUser] = useState(null);
@@ -124,9 +125,17 @@ function NavBar() {
                   </button>
                   <h4
                     name="email"
-                    className="text-center md:mt-5 mt-10 text-sm md:text-base text-white font-medium"
+                    className="text-center md:mt-5 mt-10 text-sm md:text-base text-white font-medium flex items-center gap-1 justify-center"
                   >
                     {user.email}
+                    {user.emailVerified ? (
+                      <MdVerified
+                        className="text-blue-500 hover:text-blue-600 cursor-pointer"
+                        title="A verified email."
+                      />
+                    ) : (
+                      ""
+                    )}
                   </h4>
                   <img
                     src={user.image}

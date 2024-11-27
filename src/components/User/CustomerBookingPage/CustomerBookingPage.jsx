@@ -3,6 +3,7 @@ import axios from "axios";
 import NavBar from "../../NavBar/NavBar";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const CustomerBookingPage = () => {
   const [bookings, setBookings] = useState([]);
@@ -27,6 +28,7 @@ const CustomerBookingPage = () => {
       })
       .catch((err) => {
         console.error("Error fetching bookings:", err);
+        setLoading(false);
       });
   }, [bookingIsLoaded]);
 
@@ -83,14 +85,20 @@ const CustomerBookingPage = () => {
     );
   }
 
-  if (!bookings || bookings.length === 0) {
+  if (bookings.length === 0) {
     return (
       <>
         <NavBar />
         <div className="mt-20 text-center">
-          <p className="text-gray-600 text-xl font-semibold">
+          <p className="text-gray-600 text-lg font-semibold">
             You have not booked any rooms yet.
           </p>
+          <Link
+            to="/rooms"
+            className="text-blue-400 text-base font-medium hover:underline"
+          >
+            Booking Now
+          </Link>
         </div>
       </>
     );

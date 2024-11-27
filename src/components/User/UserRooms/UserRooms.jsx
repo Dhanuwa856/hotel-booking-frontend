@@ -6,7 +6,7 @@ import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
 
 function UserRooms() {
-  const [rooms, setRooms] = useState("");
+  const [rooms, setRooms] = useState(null);
   const [categories, setCategories] = useState([]);
   const [roomsIsLoaded, setRoomsIsLoaded] = useState(false);
   const [hoveredRoom, setHoveredRoom] = useState(null);

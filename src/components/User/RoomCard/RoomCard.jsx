@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import NavBar from "../../NavBar/NavBar";
-// import "./UserRooms.css";
 import axios from "axios";
 import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
@@ -8,44 +6,56 @@ import { Link } from "react-router-dom";
 function RoomCard() {
   const [rooms, setRooms] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [roomsIsLoaded, setRoomsIsLoaded] = useState(false);
   const [hoveredRoom, setHoveredRoom] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize] = useState(6); // Number of items per page
 
   const apiURL = `${import.meta.env.VITE_API_URL}`;
 
+  // Fetch paginated rooms
   useEffect(() => {
     const token = localStorage.getItem("userToken");
     axios
-      .get(`${apiURL}/rooms/`, {
+      .get(`${apiURL}/rooms`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: {
+          page: currentPage,
+          pageSize,
+        },
       })
       .then((res) => {
-        setRooms(res.data);
-        setRoomsIsLoaded(true);
+        setRooms(res.data.rooms);
+        setTotalPages(res.data.totalPages);
       })
       .catch((err) => {
         console.error("Error fetching rooms:", err);
       });
-  }, [roomsIsLoaded]);
+  }, [currentPage, pageSize]);
 
+  // Fetch categories
   useEffect(() => {
     const token = localStorage.getItem("userToken");
     axios
-      .get(`${apiURL}/categories/`, {
+      .get(`${apiURL}/categories`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
         setCategories(res.data);
-        setRoomsIsLoaded(true);
       })
       .catch((err) => {
         console.error("Error fetching categories:", err);
       });
-  }, [roomsIsLoaded]);
+  }, []);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="container mx-auto px-4 mt-10">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -117,6 +127,22 @@ function RoomCard() {
               </div>
             </div>
           </div>
+        ))}
+      </div>
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-8 mb-4 gap-1">
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => handlePageChange(page)}
+            className={`w-[40px] h-[40px] border border-gray-500/80 ${
+              currentPage === page
+                ? "bg-[#FF6F61] text-white"
+                : "bg-white/60 text-gray-700 hover:bg-gray-300"
+            }`}
+          >
+            {page}
+          </button>
         ))}
       </div>
     </div>
