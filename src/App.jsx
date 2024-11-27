@@ -12,6 +12,7 @@ import UserRooms from "./components/User/UserRooms/UserRooms";
 import UserBookingPage from "./components/User/UserBookingPage/UserBookingPage";
 import CustomerBookingPage from "./components/User/CustomerBookingPage/CustomerBookingPage";
 import UserRoomPage from "./components/User/UserRoomPage/UserRoomPage";
+import VerifyEmail from "./components/VerificationPage/VerificationPage";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/email-verify" element={<VerifyEmail />} />
         <Route path="/gallery" element={<UserGallery />} />
         <Route path="/gallery/gallery-item" element={<UserGalleryItem />} />
         <Route path="/rooms" element={<UserRoomPage />} />

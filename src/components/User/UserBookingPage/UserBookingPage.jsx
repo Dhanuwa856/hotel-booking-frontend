@@ -67,136 +67,138 @@ function UserBookingPage() {
       </div>
 
       {/* Main Container */}
-      <div className="max-w-5xl mx-auto my-12 flex gap-8 px-4">
-        {/* Room Details Section */}
-        <div className="space-y-2 w-1/2">
-          {/* Room Photos */}
-          <div className="gap-4 grid-cols-2 grid">
-            {roomDetails.photos.map((photo, index) => (
-              <img
-                key={index}
-                src={photo}
-                alt={`Room ${index + 1}`}
-                className="rounded-lg shadow-lg"
-              />
-            ))}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Room Details Section */}
+          <div className="lg:w-1/2">
+            {/* Room Photos */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              {roomDetails.photos.map((photo, index) => (
+                <img
+                  key={index}
+                  src={photo}
+                  alt={`Room ${index + 1}`}
+                  className="rounded-lg shadow-lg w-full"
+                />
+              ))}
+            </div>
+            {/* Room Information */}
+            <div className="space-y-4">
+              <h2 className="text-3xl font-semibold text-gray-800">
+                {roomDetails.category} Room
+              </h2>
+              <p className="text-gray-600">{roomDetails.description}</p>
+              <p className="text-xl font-medium text-blue-500">
+                Price: ${roomDetails.price} / night
+              </p>
+              <p className="text-sm text-gray-600">
+                Max Guests: {roomDetails.maxGuests}
+              </p>
+            </div>
           </div>
-          {/* Room Details */}
-          <div className="space-y-4">
-            <h2 className="text-3xl font-semibold">
-              {roomDetails.category} Room
+
+          {/* Booking Form Section */}
+          <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 lg:w-1/2">
+            <h2 className="text-3xl font-semibold text-center mb-6">
+              Book This Room
             </h2>
-            <p className="text-gray-600 text-lg">{roomDetails.description}</p>
-            <p className="text-xl font-medium text-blue-500">
-              Price: ${roomDetails.price} / night
-            </p>
-            <p className="text-sm text-gray-600">
-              Max Guests: {roomDetails.maxGuests}
-            </p>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Check-in Date */}
+              <div>
+                <label
+                  htmlFor="checkInDate"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Check-In Date
+                </label>
+                <input
+                  type="date"
+                  id="checkInDate"
+                  name="checkInDate"
+                  onChange={handleChange}
+                  value={formData.checkInDate}
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+
+              {/* Check-out Date */}
+              <div>
+                <label
+                  htmlFor="checkOutDate"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Check-Out Date
+                </label>
+                <input
+                  type="date"
+                  id="checkOutDate"
+                  name="checkOutDate"
+                  onChange={handleChange}
+                  value={formData.checkOutDate}
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+
+              {/* Number of Guests */}
+              <div>
+                <label
+                  htmlFor="guests"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Number of Guests
+                </label>
+                <input
+                  type="number"
+                  id="guests"
+                  name="guests"
+                  placeholder="Number of Guests"
+                  value={formData.guests}
+                  onChange={handleChange}
+                  min="1"
+                  max={roomDetails.maxGuests}
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+
+              {/* Confirm Booking Button */}
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center">
+                    <svg
+                      className="animate-spin h-5 w-5 mr-2 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      ></path>
+                    </svg>
+                    Loading...
+                  </span>
+                ) : (
+                  "Confirm Booking"
+                )}
+              </button>
+            </form>
           </div>
-        </div>
-
-        {/* Booking Form Section */}
-        <div className="p-6 bg-white rounded-lg shadow-lg border border-gray-200 w-1/2">
-          <h2 className="text-3xl font-semibold text-center mb-6">
-            Book This Room
-          </h2>
-          <form onSubmit={handleSubmit} className="space-y-10">
-            {/* Check-in Date */}
-            <div>
-              <label
-                htmlFor="checkInDate"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Check-In Date
-              </label>
-              <input
-                type="date"
-                id="checkInDate"
-                name="checkInDate"
-                onChange={handleChange}
-                value={formData.checkInDate}
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
-                required
-              />
-            </div>
-
-            {/* Check-out Date */}
-            <div>
-              <label
-                htmlFor="checkOutDate"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Check-Out Date
-              </label>
-              <input
-                type="date"
-                id="checkOutDate"
-                name="checkOutDate"
-                onChange={handleChange}
-                value={formData.checkOutDate}
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
-                required
-              />
-            </div>
-
-            {/* Number of Guests */}
-            <div>
-              <label
-                htmlFor="guests"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Number of Guests
-              </label>
-              <input
-                type="number"
-                id="guests"
-                name="guests"
-                placeholder="Number of Guests"
-                value={formData.guests}
-                onChange={handleChange}
-                min="1"
-                max={roomDetails.maxGuests}
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            {/* Confirm Booking Button */}
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300"
-              disabled={loading}
-            >
-              {loading ? (
-                <span className="flex items-center justify-center">
-                  <svg
-                    className="animate-spin h-5 w-5 mr-2 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                    ></path>
-                  </svg>
-                  Loading...
-                </span>
-              ) : (
-                "Confirm Booking"
-              )}
-            </button>
-          </form>
         </div>
       </div>
     </>

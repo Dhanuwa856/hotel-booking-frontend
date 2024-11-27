@@ -13,6 +13,15 @@ function UserRoomPage() {
           Rooms
         </h1>
       </div>
+      <div className="container mx-auto px-4 mt-5">
+        <h2 className="text-4xl font-bold text-center text-[#021c2e] mb-2">
+          Explore Our Rooms
+        </h2>
+        <p className="text-center text-[#021c2e] mb-5">
+          Comfort and luxury in every room
+        </p>
+        {/* <RoomCard /> */}
+      </div>
       <RoomCard />
     </>
   );

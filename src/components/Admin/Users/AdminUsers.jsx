@@ -113,7 +113,7 @@ const AdminUsers = () => {
                   <img
                     src={user.image}
                     alt={`${user.firstName} Image`}
-                    className="w-[50px] h-[50px] object-cover object-center rounded-full"
+                    className="w-[50px] h-[50px] object-cover object-top rounded-full"
                   />
                 </td>
 

@@ -5,6 +5,7 @@ import { AiOutlineMail, AiOutlineLock, AiOutlineUser } from "react-icons/ai";
 import { BsPhone } from "react-icons/bs";
 import uploadMedia from "../../Utils/mediaUpload";
 import "./SignUp.css";
+import toast from "react-hot-toast";
 
 function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -48,7 +49,10 @@ function SignUp() {
         whatsApp: whatsappNumber,
         phone: phoneNumber,
       });
-      navigate("/login");
+      toast.success(
+        "OTP has been sent to your email. Please check your inbox."
+      );
+      navigate("/email-verify");
     } catch (err) {
       setLoading(false);
       if (err.response?.data?.message?.includes("duplicate key")) {
@@ -197,6 +201,7 @@ function SignUp() {
             <label className="block mb-2 text-gray-200">
               Upload Your Profile Image
             </label>
+
             <input
               type="file"
               onChange={(e) => setImage(e.target.files[0])}
