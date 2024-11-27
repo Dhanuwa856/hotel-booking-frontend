@@ -4,13 +4,20 @@ import NavBar from "../../NavBar/NavBar";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
+import { FaFilter } from "react-icons/fa";
 
 const CustomerBookingPage = () => {
   const [bookings, setBookings] = useState([]);
   const [bookingIsLoaded, setBookingIsLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize] = useState(6); // Number of items per page
+  const [status, setStatus] = useState("");
 
-  const apiURL = `${import.meta.env.VITE_API_URL}/booking/`;
+  const apiURL = `${import.meta.env.VITE_API_URL}/booking`;
+
+  console.log(status);
 
   useEffect(() => {
     const token = localStorage.getItem("userToken");
@@ -20,9 +27,15 @@ const CustomerBookingPage = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: {
+          page: currentPage,
+          pageSize,
+          status: status,
+        },
       })
       .then((res) => {
         setBookings(res.data.bookings);
+        setTotalPages(res.data.pagination.totalPages);
         setBookingIsLoaded(true);
         setLoading(false);
       })
@@ -30,7 +43,7 @@ const CustomerBookingPage = () => {
         console.error("Error fetching bookings:", err);
         setLoading(false);
       });
-  }, [bookingIsLoaded]);
+  }, [bookingIsLoaded, currentPage, pageSize, status]);
 
   function handleCancel(bookingId) {
     const token = localStorage.getItem("userToken");
@@ -73,15 +86,21 @@ const CustomerBookingPage = () => {
   const sortedBookings = bookings.sort(
     (a, b) => new Date(b.timeStamp) - new Date(a.timeStamp)
   );
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-50">
-        <div className="flex items-center space-x-2">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
-          <p className="text-lg font-medium text-gray-700">Loading...</p>
+      <>
+        <NavBar />
+        <div className="flex justify-center items-center h-screen bg-gray-50">
+          <div className="flex items-center space-x-2">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+            <p className="text-lg font-medium text-gray-700">Loading...</p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -112,6 +131,27 @@ const CustomerBookingPage = () => {
         <h1 className="text-gray-800 capitalize text-2xl tracking-wide font-bold text-left">
           My Bookings
         </h1>
+
+        <div className="flex items-center w-full max-w-[250px] gap-2 mt-4">
+          {/* Filter Icon */}
+          <button className="p-2 bg-[#FF6F61] text-white rounded-lg focus:outline-none hover:bg-[#e65c50]">
+            <FaFilter className="w-4 h-4" />
+          </button>
+          {/* Dropdown */}
+          <select
+            value={status}
+            onChange={(e) => {
+              setStatus(e.target.value);
+            }}
+            className="appearance-none border border-gray-300 rounded-lg px-4 py-2 w-full bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#FF6F61] focus:border-[#FF6F61] font-medium"
+          >
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+
         {sortedBookings.map((booking, idx) => (
           <div
             className="bg-white shadow-xl rounded-lg mt-8 w-[90%] lg:w-[70%] mx-auto p-6"
@@ -216,6 +256,26 @@ const CustomerBookingPage = () => {
           </div>
         ))}
       </div>
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-8 mb-4">
+          <div className="flex overflow-x-auto gap-1 max-w-full px-2 scrollbar-hide">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`w-[40px] h-[40px] border border-gray-500/80 flex-shrink-0 ${
+                  currentPage === page
+                    ? "bg-[#FF6F61] text-white"
+                    : "bg-white/60 text-gray-700 hover:bg-gray-300"
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </>
   );
 };
