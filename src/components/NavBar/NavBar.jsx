@@ -70,8 +70,8 @@ function NavBar() {
   };
 
   return (
-    <div>
-      <div className="flex items-center justify-between  bg-[#E3F2FD] px-5 py-4 shadow-xl">
+    <div className="md:sticky md:top-0 z-[100] md:w-full">
+      <div className="flex items-center justify-between  bg-[#E3F2FD] px-5 py-2 shadow-xl">
         <div>
           <Link to="/">
             <img

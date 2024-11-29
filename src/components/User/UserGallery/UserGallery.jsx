@@ -4,6 +4,7 @@ import "./UserGallery.css";
 import { FaRegHandPointRight } from "react-icons/fa";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Footer from "../../Footer/Footer";
 
 function UserGallery() {
   const [galleryItems, setGalleryItems] = useState(null);
@@ -35,6 +36,7 @@ function UserGallery() {
             <p className="text-lg font-semibold text-gray-700">Loading...</p>
           </div>
         </div>
+        <Footer />
       </>
     );
   }
@@ -88,6 +90,7 @@ function UserGallery() {
           </div>
         ))}
       </div>
+      <Footer />
     </>
   );
 }

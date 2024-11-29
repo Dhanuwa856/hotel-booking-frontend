@@ -26,7 +26,7 @@ function UserFeedbackCard() {
   }, [feedbackIsLoaded]);
 
   return (
-    <div className="container mx-auto mt-20">
+    <div className="container mx-auto mt-20 cursor-grab">
       <AliceCarousel
         mouseTracking
         autoPlay="true"

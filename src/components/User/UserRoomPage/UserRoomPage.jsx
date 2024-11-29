@@ -2,6 +2,7 @@ import React from "react";
 import NavBar from "../../NavBar/NavBar";
 import "../UserRooms/UserRooms.css";
 import RoomCard from "../RoomCard/RoomCard";
+import Footer from "../../Footer/Footer";
 
 function UserRoomPage() {
   return (
@@ -22,6 +23,7 @@ function UserRoomPage() {
         </p>
       </div>
       <RoomCard />
+      <Footer />
     </>
   );
 }

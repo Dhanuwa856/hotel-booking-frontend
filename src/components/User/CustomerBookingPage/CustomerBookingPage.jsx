@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { FaFilter } from "react-icons/fa";
+import Footer from "../../Footer/Footer";
 
 const CustomerBookingPage = () => {
   const [bookings, setBookings] = useState([]);
@@ -276,6 +277,7 @@ const CustomerBookingPage = () => {
           </div>
         </div>
       )}
+      <Footer />
     </>
   );
 };

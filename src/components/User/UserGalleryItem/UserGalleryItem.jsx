@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import "./UserGalleryItem.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
+import Footer from "../../Footer/Footer";
 
 function UserGalleryItem() {
   const location = useLocation();
@@ -22,7 +23,7 @@ function UserGalleryItem() {
       <div className="bg-blue-200 mt-10 text-blue-900 w-[80%] mx-auto text-justify text-lg font-medium capitalize px-5 py-4">
         <p>{description}</p>
       </div>
-      <div className="w-[80%] h-[60vh] mx-auto mt-16">
+      <div className="w-[80%] h-[50vh] mx-auto mt-16">
         <Carousel
           showArrows={true}
           autoPlay={true}

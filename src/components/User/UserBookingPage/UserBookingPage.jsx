@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import "./UserBookingPage.css";
+import Footer from "../../Footer/Footer";
 
 function UserBookingPage() {
   const location = useLocation();
@@ -201,6 +202,7 @@ function UserBookingPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
