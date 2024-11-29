@@ -99,7 +99,7 @@ function NavBar() {
           <div className="flex flex-col md:flex-row gap-6 p-6 mt-10 md:mt-0 md:p-0">
             <NavLinks link_url="/" link_name="Home" />
             <NavLinks link_url="/rooms" link_name="Rooms" />
-            <NavLinks link_url="/offers" link_name="Offers" />
+            <NavLinks link_url="/category" link_name="Category" />
             <NavLinks link_url="/gallery" link_name="Gallery" />
             <NavLinks link_url="/about-us" link_name="About Us" />
           </div>

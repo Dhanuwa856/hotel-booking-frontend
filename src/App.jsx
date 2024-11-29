@@ -13,6 +13,7 @@ import UserBookingPage from "./components/User/UserBookingPage/UserBookingPage";
 import CustomerBookingPage from "./components/User/CustomerBookingPage/CustomerBookingPage";
 import UserRoomPage from "./components/User/UserRoomPage/UserRoomPage";
 import VerifyEmail from "./components/VerificationPage/VerificationPage";
+import CategoryPage from "./components/User/CategoryPage/CategoryPage";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="/gallery/gallery-item" element={<UserGalleryItem />} />
         <Route path="/rooms" element={<UserRoomPage />} />
         <Route path="/rooms/booking" element={<UserBookingPage />} />
+        <Route path="/category" element={<CategoryPage />} />
         <Route path="/customer-booking" element={<CustomerBookingPage />} />
         <Route path="/user-update" element={<UserInfoUpdate />} />
         <Route path="/admin/*" element={<AdminPage />} />

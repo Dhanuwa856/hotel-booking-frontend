@@ -99,7 +99,7 @@ function Footer() {
               />
             </Link>
             <p className="text-gray-400 text-sm text-justify capitalize font-medium mt-2">
-              At [Hotel Name], we strive to provide exceptional hospitality,
+              At Hotel Name, we strive to provide exceptional hospitality,
               comfort, and luxury to every guest. From cozy rooms to world-class
               amenities, we ensure a memorable stay tailored to your needs.
               Experience the perfect blend of warmth and elegance with us!
