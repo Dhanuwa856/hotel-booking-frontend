@@ -6,26 +6,26 @@ const AboutUs = () => {
     <section className="container mx-auto mt-10 py-12 px-6 lg:px-16">
       <div className="container mx-auto flex flex-col lg:flex-row  gap-10">
         {/* Images Section */}
-        <div className="flex flex-wrap lg:w-1/2 gap-4 justify-center lg:justify-end">
+        <div className="flex flex-wrap lg:w-1/2 gap-2 justify-center lg:justify-end">
           <img
-            src="https://placehold.co/100x100"
+            src="/about1.jpg"
             alt="Image 1"
-            className="w-[40%] h-auto"
+            className="w-[45%] h-[150px] md:h-[250px] object-cover scale-90"
           />
           <img
-            src="https://placehold.co/200x200"
+            src="/about2.jpg"
             alt="Image 2"
-            className="w-[45%] h-auto"
+            className="w-[45%] h-[150px] md:h-[250px] object-cover"
           />
           <img
-            src="https://placehold.co/200x200"
+            src="/about3.jpg"
             alt="Image 3"
-            className="w-[45%] h-auto"
+            className="w-[45%] h-[150px] md:h-[250px] object-cover"
           />
           <img
-            src="https://placehold.co/100x100"
+            src="/about4.jpg"
             alt="Image 4"
-            className="w-[40%] h-auto"
+            className="w-[45%] h-[150px] md:h-[250px] scale-90 object-cover"
           />
         </div>
 
@@ -47,7 +47,7 @@ const AboutUs = () => {
             apart. We look forward to hosting you!
           </p>
           {/* Bullet Points */}
-          <ul className=" md:list-inside text-gray-600 space-y-4 mt-4">
+          <ul className="hidden md:block md:list-inside text-gray-600 space-y-4 mt-4">
             <li className="flex items-center gap-2">
               <GiNorthStarShuriken /> Over 20 years of exceptional hospitality
               experience

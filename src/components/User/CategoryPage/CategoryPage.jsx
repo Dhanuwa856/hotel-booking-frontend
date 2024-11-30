@@ -36,9 +36,9 @@ function CategoryPage() {
           Explore Our Room categories
         </h2>
       </div>
-      <div className="container mt-10 mx-auto grid md:grid-cols-2 gap-4 ">
+      <div className="container mt-10 mx-auto grid md:grid-cols-4 gap-4 ">
         {categories.map((category, idx) => (
-          <div className="bg-gray-100 mt-10 pb-10 rounded-md" key={idx}>
+          <div className="bg-gray-100 w-full mt-10 pb-10 rounded-md" key={idx}>
             <img
               src={category.image}
               alt={category.name}

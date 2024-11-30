@@ -7,28 +7,36 @@ import { Link, useNavigate } from "react-router-dom";
 function AdminRooms() {
   const [rooms, setRooms] = useState(null);
   const [roomsIsLoaded, setRoomsIsLoaded] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize] = useState(10); // Number of items per page
+
   const apiURL = import.meta.env.VITE_API_URL + "/rooms/";
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("userToken");
-    if (!roomsIsLoaded) {
-      axios
-        .get(apiURL, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          setRooms(res.data);
-          setRoomsIsLoaded(true);
-        })
-        .catch((err) => {
-          console.error("Error fetching rooms:", err);
-        });
-    }
-  }, [roomsIsLoaded]);
+
+    axios
+      .get(apiURL, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          page: currentPage,
+          pageSize,
+        },
+      })
+      .then((res) => {
+        setRooms(res.data.rooms);
+        setTotalPages(res.data.totalPages);
+        setRoomsIsLoaded(true);
+      })
+      .catch((err) => {
+        console.error("Error fetching rooms:", err);
+      });
+  }, [roomsIsLoaded, currentPage, pageSize]);
 
   function handleDelete(room_id) {
     const confirmDelete = window.confirm(
@@ -64,6 +72,9 @@ function AdminRooms() {
       </div>
     );
   }
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -154,6 +165,22 @@ function AdminRooms() {
             ))}
           </tbody>
         </table>
+        {/* Pagination Controls */}
+        <div className="flex justify-center mt-8 mb-4 gap-1">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={`w-[40px] h-[40px] border border-gray-500/80 ${
+                currentPage === page
+                  ? "bg-[#FF6F61] text-white"
+                  : "bg-white/60 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
