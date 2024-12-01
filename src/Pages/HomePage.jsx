@@ -8,6 +8,7 @@ import AboutUs from "../components/User/AboutUs/AboutUs";
 import RoomCard2 from "../components/User/RoomCard/RoomCard2";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import FeedbackSection from "../components/User/FeedbackSection/FeedbackSection";
 
 export const HomePage = () => {
   return (
@@ -42,6 +43,7 @@ export const HomePage = () => {
       </Link>
 
       <UserFeedbackPage />
+      <FeedbackSection />
       <Footer />
     </>
   );

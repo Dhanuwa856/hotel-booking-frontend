@@ -59,6 +59,8 @@ function NavBar() {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("userToken");
+        localStorage.removeItem("userRating");
+        localStorage.removeItem("userComment");
         setUser(null);
         toast.success("You have been logged out successfully.", {
           duration: 3000,

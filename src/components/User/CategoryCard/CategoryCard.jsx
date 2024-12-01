@@ -35,7 +35,7 @@ const CategoryCard = () => {
           breakpoints={{
             640: { slidesPerView: 1 },
             768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
+            1024: { slidesPerView: 4 },
           }}
         >
           {categories.map((category) => (
@@ -47,18 +47,15 @@ const CategoryCard = () => {
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800">
+                  <h3 className="text-lg text-gray-800 text-center font-semibold">
                     {category.name}
                   </h3>
-                  <div className="flex flex-wrap gap-2 text-sm text-gray-600 my-2">
-                    {category.features.map((feature, index) => (
-                      <span
-                        key={index}
-                        className="bg-gray-100 text-xs px-2 py-1 rounded-full"
-                      >
-                        {feature}
-                      </span>
-                    ))}
+                  <p className="mt-2  text-sm text-gray-400 text-center line-clamp-2">
+                    {category.description}
+                  </p>
+                  <div className=" font-bold mt-2 text-sm text-gray-500 ">
+                    ${category.price}
+                    <span className="text-sm font-normal">/ night</span>
                   </div>
                   <button className="mt-4 w-full bg-[#FF6F61] text-white text-sm font-medium py-2 px-4 rounded-lg transition">
                     Explore More
