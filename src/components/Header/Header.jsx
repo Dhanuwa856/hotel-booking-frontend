@@ -3,6 +3,7 @@ import "../Header/Header.css";
 import axios from "axios";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 const Header = () => {
   const [formData, setFormData] = useState({
@@ -93,7 +94,20 @@ const Header = () => {
       <div className="header w-full h-full bg-no-repeat bg-cover relative">
         <div className="header-bg-filter w-full h-full absolute bg-[#3278aa] opacity-[30%] left-0 top-0"></div>
 
-        <div className="absolute input-area backdrop-blur-lg w-full sm:w-[50%] md:w-[40%] lg:w-[30%] mt-[25px] left-1/2 -translate-x-1/2 rounded-lg px-[20px] sm:px-[40px] md:px-[50px] py-[30px] shadow-2xl">
+        <motion.div
+          className="absolute input-area backdrop-blur-lg w-full sm:w-[50%] md:w-[40%] lg:w-[30%] mt-[25px] left-1/2 -translate-x-1/2 rounded-lg px-[20px] sm:px-[40px] md:px-[50px] py-[30px] shadow-2xl"
+          initial={{
+            opacity: 0,
+          }}
+          whileInView={{
+            opacity: 1,
+          }}
+          viewport={{ once: true }}
+          transition={{
+            delay: 0.4,
+            duration: 1,
+          }}
+        >
           <h2 className="text-3xl font-bold text-[#021c2e] mb-4 capitalize text-center sm:text-left">
             Book Your Stay
           </h2>
@@ -166,7 +180,7 @@ const Header = () => {
               Book Now
             </button>
           </form>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

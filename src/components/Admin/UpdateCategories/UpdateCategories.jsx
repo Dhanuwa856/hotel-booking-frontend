@@ -3,6 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import uploadMedia from "../../../Utils/mediaUpload";
 import { useLocation, useNavigate } from "react-router-dom";
+import { MdDeleteOutline } from "react-icons/md";
 
 function UpdateCategories() {
   const location = useLocation();
@@ -15,10 +16,13 @@ function UpdateCategories() {
   const [name, setName] = useState(location.state.name);
   const [price, setPrice] = useState(location.state.price);
   const [description, setDescription] = useState(location.state.description);
-  const [features, setFeatures] = useState(location.state.features.join(","));
+  const [features, setFeatures] = useState(location.state.features);
+  const [newFeature, setNewFeature] = useState("");
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  console.log(features);
 
   const apiUrl = import.meta.env.VITE_API_URL + "/categories/";
   const token = localStorage.getItem("userToken");
@@ -41,7 +45,7 @@ function UpdateCategories() {
               name: name,
               price: price,
               description: description,
-              features: features.split(","),
+              features: features,
               image: location.state.image,
             },
             {
@@ -94,6 +98,17 @@ function UpdateCategories() {
       console.error(err);
     }
   }
+  const handleAddFeature = () => {
+    if (newFeature.trim() !== "") {
+      setFeatures([...features, newFeature.trim()]);
+      setNewFeature(""); // Clear the input field
+    }
+  };
+
+  const handleRemoveFeature = (index) => {
+    const updatedFeatures = features.filter((_, i) => i !== index);
+    setFeatures(updatedFeatures);
+  };
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
@@ -145,15 +160,43 @@ function UpdateCategories() {
             required
           />
         </div>
+
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Features</label>
-          <div className="flex items-center mb-2">
+          <div className="flex items-center gap-2 mb-2">
             <input
               type="text"
+              value={newFeature}
+              onChange={(e) => setNewFeature(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              value={features}
-              onChange={(e) => setFeatures(e.target.value)}
+              placeholder="Enter a feature"
             />
+            <button
+              type="button"
+              onClick={handleAddFeature}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Add
+            </button>
+          </div>
+
+          {/* Display Features List */}
+          <div className="mt-4">
+            {features.map((item, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between bg-gray-100 px-3 py-2 mb-2 rounded-md"
+              >
+                <span>{item}</span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveFeature(index)}
+                  className="text-red-500 hover:underline text-lg"
+                >
+                  <MdDeleteOutline />
+                </button>
+              </div>
+            ))}
           </div>
         </div>
         <div className="mb-4">
