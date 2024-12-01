@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const AdminFeedback = () => {
-  const [feedbacks, setFeedbacks] = useState(null);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [editFeedback, setEditFeedback] = useState(null);
   const [feedbackIsLoaded, setFeedbackIsLoaded] = useState(false);
 
@@ -25,6 +25,10 @@ const AdminFeedback = () => {
         console.error("Error fetching feedback:", err);
       });
   }, [feedbackIsLoaded]);
+
+  const sortedFeedbacks = feedbacks.sort(
+    (a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)
+  );
 
   // Handle feedback status update
   const handleStatusChange = (id, newStatus) => {
@@ -90,7 +94,7 @@ const AdminFeedback = () => {
             </tr>
           </thead>
           <tbody className="text-gray-700 text-sm">
-            {feedbacks.map((feedback) => (
+            {sortedFeedbacks.map((feedback) => (
               <tr
                 key={feedback.feedback_id}
                 className="border-b border-gray-200 hover:bg-gray-100 transition duration-150"

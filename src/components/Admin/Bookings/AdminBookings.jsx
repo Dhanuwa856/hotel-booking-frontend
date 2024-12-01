@@ -4,7 +4,7 @@ import { FaEdit } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 const AdminBookings = () => {
-  const [bookings, setBookings] = useState();
+  const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [bookingsIsLoaded, setBookingIsLoaded] = useState(false);
   const [status, setStatus] = useState("");
@@ -32,6 +32,10 @@ const AdminBookings = () => {
         console.error("Error fetching bookings:", err);
       });
   }, [bookingsIsLoaded]);
+
+  const sortedBookings = bookings.sort(
+    (a, b) => new Date(b.timeStamp) - new Date(a.timeStamp)
+  );
 
   const openModal = (booking) => {
     setSelectedBooking(booking);
@@ -106,7 +110,7 @@ const AdminBookings = () => {
             </tr>
           </thead>
           <tbody className="text-gray-700 text-sm">
-            {bookings.map((booking) => (
+            {sortedBookings.map((booking) => (
               <tr
                 key={booking.booking_id}
                 className="border-b border-gray-200 hover:bg-gray-100 transition duration-150"
