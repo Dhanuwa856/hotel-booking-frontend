@@ -54,8 +54,8 @@ const CategoryCard = () => {
             1024: { slidesPerView: 4 },
           }}
         >
-          {categories.map((category) => (
-            <SwiperSlide key={category.id}>
+          {categories.map((category, idx) => (
+            <SwiperSlide key={idx}>
               <motion.div
                 className="bg-white shadow-md mt-4 rounded-lg overflow-hidden transition-transform transform hover:scale-105"
                 initial={{

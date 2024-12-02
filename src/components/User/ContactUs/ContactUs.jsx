@@ -1,6 +1,7 @@
 import React from "react";
 import NavBar from "../../NavBar/NavBar";
 import Footer from "../../Footer/Footer";
+import FAQ from "../Faq/Faq";
 
 const ContactUs = () => {
   return (
@@ -110,6 +111,7 @@ const ContactUs = () => {
           </div>
         </div>
       </div>
+      <FAQ />
       <Footer />
     </>
   );
