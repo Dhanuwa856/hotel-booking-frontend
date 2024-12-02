@@ -61,7 +61,7 @@ function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <IoMdArrowDropright />
-                <Link to={"/"} className="hover:text-white transition">
+                <Link to={"/contact"} className="hover:text-white transition">
                   Contact Us
                 </Link>
               </li>

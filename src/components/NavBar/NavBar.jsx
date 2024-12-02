@@ -103,7 +103,7 @@ function NavBar() {
             <NavLinks link_url="/rooms" link_name="Rooms" />
             <NavLinks link_url="/category" link_name="Category" />
             <NavLinks link_url="/gallery" link_name="Gallery" />
-            <NavLinks link_url="/about-us" link_name="About Us" />
+            <NavLinks link_url="/contact" link_name="Contact Us" />
           </div>
         </nav>
 
