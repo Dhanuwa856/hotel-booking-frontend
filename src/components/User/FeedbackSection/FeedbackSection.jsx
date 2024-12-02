@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { FaStar } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { motion } from "framer-motion";
 
 function FeedbackForm() {
   const [selectedRating, setSelectedRating] = useState(0); // Store the selected rating
@@ -114,7 +115,22 @@ function FeedbackForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-6 p-6 bg-white shadow-md rounded-md">
+    <motion.div
+      className="w-[95%] md:max-w-md mx-auto mt-6 p-6 bg-white shadow-md rounded-md"
+      initial={{
+        y: 70,
+        opacity: 0,
+      }}
+      whileInView={{
+        y: 0,
+        opacity: 1,
+      }}
+      viewport={{ once: true }}
+      transition={{
+        delay: 0.4,
+        duration: 1,
+      }}
+    >
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">
         Write Your Feedback
       </h2>
@@ -168,7 +184,7 @@ function FeedbackForm() {
           </h3>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

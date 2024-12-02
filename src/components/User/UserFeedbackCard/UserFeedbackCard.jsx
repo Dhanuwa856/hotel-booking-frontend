@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import AliceCarousel, { Link } from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { FaStar, FaRegStar } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 function UserFeedbackCard() {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -41,9 +42,22 @@ function UserFeedbackCard() {
         }}
       >
         {feedbacks.map((feedback, idx) => (
-          <div
+          <motion.div
             className="bg-gray-800 w-[75%] md:w-[85%] px-10 py-10 mx-auto rounded-xl shadow-lg relative !overflow-visible"
             key={idx}
+            initial={{
+              y: 70,
+              opacity: 0,
+            }}
+            whileInView={{
+              y: 0,
+              opacity: 1,
+            }}
+            viewport={{ once: true }}
+            transition={{
+              delay: 0.4,
+              duration: 1,
+            }}
           >
             <p className="text-center text-white text-sm w-[70%] mx-auto relative leading-6">
               <span className="text-yellow-500 text-5xl  font-serif absolute -left-3 -top-3">
@@ -70,7 +84,7 @@ function UserFeedbackCard() {
                 </span>
               ))}
             </div>
-          </div>
+          </motion.div>
         ))}
       </AliceCarousel>
     </div>

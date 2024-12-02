@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function RoomCard2() {
   const [rooms, setRooms] = useState([]);
@@ -60,11 +61,24 @@ function RoomCard2() {
     <div className="container mx-auto px-4 mt-10">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {rooms.map((room, idx) => (
-          <div
+          <motion.div
             className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform relative mt-10"
             onMouseEnter={() => setHoveredRoom(room.roomNumber)}
             onMouseLeave={() => setHoveredRoom(null)}
             key={idx}
+            initial={{
+              y: 70,
+              opacity: 0,
+            }}
+            whileInView={{
+              y: 0,
+              opacity: 1,
+            }}
+            viewport={{ once: true }}
+            transition={{
+              delay: 0.4,
+              duration: 1,
+            }}
           >
             <div className="relative overflow-hidden">
               <img
@@ -126,7 +140,7 @@ function RoomCard2() {
                 </Link>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

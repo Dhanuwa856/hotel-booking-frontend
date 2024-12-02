@@ -5,6 +5,7 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import { Autoplay } from "swiper/modules";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const CategoryCard = () => {
   const [categories, setCategories] = useState([]);
@@ -24,9 +25,24 @@ const CategoryCard = () => {
   return (
     <section className="container mx-auto bg-gray-100 mt-10 py-10">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center text-[#021c2e] mb-4">
+        <motion.h2
+          className="text-4xl font-bold text-center text-[#021c2e] mb-4"
+          initial={{
+            y: 70,
+            opacity: 0,
+          }}
+          whileInView={{
+            y: 0,
+            opacity: 1,
+          }}
+          viewport={{ once: true }}
+          transition={{
+            delay: 0.4,
+            duration: 1,
+          }}
+        >
           Explore Our Room Categories
-        </h2>
+        </motion.h2>
         <Swiper
           modules={[Autoplay]}
           spaceBetween={20}
@@ -40,7 +56,22 @@ const CategoryCard = () => {
         >
           {categories.map((category) => (
             <SwiperSlide key={category.id}>
-              <div className="bg-white shadow-md mt-4 rounded-lg overflow-hidden transition-transform transform hover:scale-105">
+              <motion.div
+                className="bg-white shadow-md mt-4 rounded-lg overflow-hidden transition-transform transform hover:scale-105"
+                initial={{
+                  y: 70,
+                  opacity: 0,
+                }}
+                whileInView={{
+                  y: 0,
+                  opacity: 1,
+                }}
+                viewport={{ once: true }}
+                transition={{
+                  delay: 0.4,
+                  duration: 0.5,
+                }}
+              >
                 <img
                   src={category.image}
                   alt={category.name}
@@ -61,7 +92,7 @@ const CategoryCard = () => {
                     Explore More
                   </button>
                 </div>
-              </div>
+              </motion.div>
             </SwiperSlide>
           ))}
         </Swiper>
