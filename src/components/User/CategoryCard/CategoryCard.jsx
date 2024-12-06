@@ -88,7 +88,7 @@ const CategoryCard = () => {
                     ${category.price}
                     <span className="text-sm font-normal">/ night</span>
                   </div>
-                  <button className="mt-4 w-full bg-[#FF6F61] text-white text-sm font-medium py-2 px-4 rounded-lg transition">
+                  <button className="mt-4 w-full bg-gradient-to-r from-[#FF6F61] to-[#ca5146] text-white text-sm font-medium py-2 px-4 rounded-lg transition hover:from-[#ca5146] hover:to-[#FF6F61] duration-500">
                     Explore More
                   </button>
                 </div>

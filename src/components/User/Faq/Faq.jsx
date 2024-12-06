@@ -80,7 +80,7 @@ const FAQ = () => {
             {/* Accordion Header */}
             <div
               onClick={() => toggleAccordion(index)}
-              className="flex justify-between items-center p-4 bg-gray-800 text-white cursor-pointer"
+              className="flex justify-between items-center p-4 bg-gray-800 text-white cursor-pointer hover:bg-gray-700 transition duration-300 ease-in-out"
             >
               <h3 className="text-lg font-medium">{item.question}</h3>
               {openIndex === index ? (

@@ -134,7 +134,7 @@ function RoomCard2() {
                 <Link
                   to={"/rooms/booking"}
                   state={room}
-                  className="bg-[#FF6F61] hover:bg-[#FF5E54] text-white font-medium px-4 py-2 rounded-lg absolute bottom-2 right-5 "
+                  className="bg-gradient-to-r from-[#FF6F61] to-[#FF5E54] hover:from-[#FF5E54] hover:to-[#FF6F61] text-white font-medium px-4 py-2 rounded-lg absolute bottom-2 right-5 transition duration-500"
                 >
                   Book Now
                 </Link>

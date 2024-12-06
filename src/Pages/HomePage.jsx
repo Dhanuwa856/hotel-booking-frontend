@@ -38,8 +38,8 @@ export const HomePage = () => {
       </motion.h2>
       <RoomCard2 />
       <Link to={"/rooms"}>
-        <button className="bg-[#FF6F61] text-white mt-10 mb-4 py-4 px-5 font-bold capitalize rounded-md left-1/2 relative -translate-x-1/2 hover:bg-[#FF5E54]">
-          Explore more
+        <button className="bg-gradient-to-r from-[#FF6F61] to-[#FF5E54] text-white mt-10 mb-4 py-4 px-5 font-bold capitalize rounded-md left-1/2 relative -translate-x-1/2 hover:from-[#FF5E54] hover:to-[#FF6F61] transition duration-500">
+          Explore More
         </button>
       </Link>
       <UserFeedbackPage />

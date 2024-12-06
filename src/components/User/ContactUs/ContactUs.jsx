@@ -20,7 +20,7 @@ const ContactUs = () => {
           <div className="bg-white shadow-md p-3 rounded-lg text-center">
             <h3 className="text-xl font-semibold mb-2">Email Us</h3>
             <p className="text-gray-600 mb-4">info@example.com</p>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 text-sm">
+            <button className="px-4 py-2 text-sm font-medium text-white rounded-lg bg-gradient-to-r from-blue-500 to-blue-400 shadow-md hover:from-blue-400 hover:to-blue-500 transition-transform duration-300">
               Send Email
             </button>
           </div>
@@ -28,7 +28,7 @@ const ContactUs = () => {
           <div className="bg-white shadow-md p-3 rounded-lg text-center">
             <h3 className="text-xl font-semibold mb-2">Call Us</h3>
             <p className="text-gray-600 mb-4">+012 345 67890</p>
-            <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 text-sm">
+            <button className="px-4 py-2 text-sm font-medium text-white rounded-lg bg-gradient-to-r from-green-500 to-green-400 shadow-md hover:from-green-400 hover:to-green-500 transition-transform duration-300">
               Call Now
             </button>
           </div>
@@ -38,7 +38,7 @@ const ContactUs = () => {
             <p className="text-gray-600 mb-4">
               123 Street, Hanguranketha, Kandy
             </p>
-            <button className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 text-sm">
+            <button className="px-4 py-2 text-sm font-medium text-white rounded-lg bg-gradient-to-r from-yellow-500 to-yellow-400 shadow-md hover:from-yellow-400 hover:to-yellow-500 transition-transform duration-300">
               View on Map
             </button>
           </div>
@@ -103,7 +103,7 @@ const ContactUs = () => {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-[#FF6F61] hover:bg-[#FF5E54] text-white py-2 px-4 rounded-md "
+                className="w-full py-2 px-4 bg-gradient-to-r from-[#FF6F61] to-[#FF8C61] text-white font-semibold rounded-md shadow-lg hover:from-[#FF8C61] hover:to-[#FF6F61] transition-all duration-300 transform"
               >
                 Send Message
               </button>

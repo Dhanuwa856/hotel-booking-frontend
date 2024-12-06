@@ -78,11 +78,11 @@ function UserGallery() {
             </div>
 
             {/* View More Button */}
-            <div className="flex justify-center my-4">
+            <div className="flex justify-center mb-4">
               <Link
                 to="/gallery/gallery-item"
                 state={galleryItem}
-                className="bg-red-500 text-white font-medium px-6 py-2 rounded-full shadow-md hover:bg-red-600 transition-transform transform hover:scale-105 flex items-center gap-2 absolute bottom-1 "
+                className="bg-gradient-to-r from-red-500 to-orange-500 text-white font-medium px-6 py-2 rounded-full shadow-md hover:from-red-600 hover:to-orange-600 transition-transform transform hover:scale-105 flex items-center gap-2 absolute bottom-2"
               >
                 View More <FaRegHandPointRight />
               </Link>

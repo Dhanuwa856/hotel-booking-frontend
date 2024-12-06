@@ -175,7 +175,7 @@ const Header = () => {
 
             <button
               type="submit"
-              className="flex items-center gap-2 text-white font-medium text-lg bg-[#FF6F61] w-full h-[50px] justify-center rounded-lg mt-5 hover:bg-[#ca5146] capitalize"
+              className="flex items-center gap-2 text-white font-medium text-lg bg-gradient-to-r from-[#FF6F61] to-[#ca5146] w-full h-[50px] justify-center rounded-lg mt-5 hover:from-[#ca5146] hover:to-[#FF6F61] capitalize transition duration-500"
             >
               Book Now
             </button>

@@ -56,7 +56,7 @@ function CategoryPage() {
             <div className="mt-2 mx-auto flex items-center justify-center gap-3 text-gray-100 w-[90%] flex-wrap">
               {category.features.map((feature, i) => (
                 <span
-                  className="bg-[#FF6F61] p-2 rounded-md text-sm cursor-pointer text-nowrap"
+                  className="bg-gradient-to-r from-[#FF6F61] to-[#FF8A70] p-2 rounded-md text-sm text-white cursor-pointer text-nowrap hover:from-[#FF8A70] hover:to-[#FF6F61] transition duration-300"
                   key={i}
                 >
                   {feature}

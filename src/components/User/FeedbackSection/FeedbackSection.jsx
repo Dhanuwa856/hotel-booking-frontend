@@ -172,7 +172,7 @@ function FeedbackForm() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition"
+            className="w-full py-2 px-4 bg-gradient-to-r from-[#FF6F61] to-[#FF5E54] text-white font-semibold rounded-md hover:from-[#FF5E54] hover:to-[#FF6F61] transition duration-500"
           >
             Submit Feedback
           </button>
