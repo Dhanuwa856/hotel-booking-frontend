@@ -64,7 +64,7 @@ const CustomerBookingPage = () => {
       if (result.isConfirmed) {
         axios
           .put(
-            `${apiURL}cancel/${bookingId}`,
+            `${apiURL}/cancel/${bookingId}`,
             {},
             {
               headers: {
