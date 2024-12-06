@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
+import { FaFilter } from "react-icons/fa";
 
 function RoomCard() {
   const [rooms, setRooms] = useState([]);
@@ -10,6 +11,9 @@ function RoomCard() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize] = useState(6); // Number of items per page
+  const [roomCategory, setRoomCategory] = useState("All");
+
+  console.log(roomCategory);
 
   const apiURL = `${import.meta.env.VITE_API_URL}`;
 
@@ -24,6 +28,7 @@ function RoomCard() {
         params: {
           page: currentPage,
           pageSize,
+          category: roomCategory,
         },
       })
       .then((res) => {
@@ -33,7 +38,7 @@ function RoomCard() {
       .catch((err) => {
         console.error("Error fetching rooms:", err);
       });
-  }, [currentPage, pageSize]);
+  }, [currentPage, pageSize, roomCategory]);
 
   // Fetch categories
   useEffect(() => {
@@ -58,6 +63,25 @@ function RoomCard() {
 
   return (
     <div className="container mx-auto px-4 mt-10">
+      <div className="flex items-center w-full max-w-[250px] gap-2 mt-4">
+        {/* Filter Icon */}
+        <button className="p-2 bg-[#FF6F61] text-white rounded-lg focus:outline-none hover:bg-[#e65c50]">
+          <FaFilter className="w-4 h-4" />
+        </button>
+        {/* Dropdown */}
+        <select
+          value={roomCategory}
+          onChange={(e) => {
+            setRoomCategory(e.target.value);
+          }}
+          className="appearance-none border border-gray-300 rounded-lg px-4 py-2 w-full bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#FF6F61] focus:border-[#FF6F61] font-medium"
+        >
+          <option value="All">All Category</option>
+          <option value="Standard">Standard</option>
+          <option value="Deluxe">Deluxe</option>
+          <option value="Luxury">Luxury</option>
+        </select>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {rooms.map((room, idx) => (
           <div
@@ -130,21 +154,23 @@ function RoomCard() {
         ))}
       </div>
       {/* Pagination Controls */}
-      <div className="flex justify-center mt-8 mb-4 gap-1">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => handlePageChange(page)}
-            className={`w-[40px] h-[40px] border border-gray-500/80 ${
-              currentPage === page
-                ? "bg-[#FF6F61] text-white"
-                : "bg-white/60 text-gray-700 hover:bg-gray-300"
-            }`}
-          >
-            {page}
-          </button>
-        ))}
-      </div>
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-8 mb-4 gap-1">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={`w-[40px] h-[40px] border border-gray-500/80 ${
+                currentPage === page
+                  ? "bg-[#FF6F61] text-white"
+                  : "bg-white/60 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

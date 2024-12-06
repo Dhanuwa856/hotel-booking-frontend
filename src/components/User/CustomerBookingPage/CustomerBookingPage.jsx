@@ -18,8 +18,6 @@ const CustomerBookingPage = () => {
 
   const apiURL = `${import.meta.env.VITE_API_URL}/booking`;
 
-  console.log(status);
-
   useEffect(() => {
     const token = localStorage.getItem("userToken");
     setLoading(true);
